@@ -14,7 +14,7 @@ tags:
 
 #### 1.Binary Tree Preoder, Inorder, Postorder traversal
 
-{% asset_img 1.png 1 %}
+{% asset_img assets/1.png 1 %}
 
 一套模版走天下
 
