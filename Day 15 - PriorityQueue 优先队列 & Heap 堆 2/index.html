@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 15 - PriorityQueue 优先队列 &amp; Heap 堆 2 章节导读 上节课我们介绍了优先队列和二叉堆的基础知识，并且重点介绍了堆的经典考察模板之一：Top K问题。这节课我们来看看堆的另一种经典考察模板：k路合并。 核心算法——k路合并 k路合并一般会涉及到多个已排序的链表或者数组。这类题的特征比较明显，一旦出现K个排序好的列表，我们大概率可以利用堆来进行高效遍历：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 15 - PriorityQueue 优先队列 &amp; Heap 堆 2">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 15 - PriorityQueue 优先队列 &amp; Heap 堆 2 章节导读 上节课我们介绍了优先队列和二叉堆的基础知识，并且重点介绍了堆的经典考察模板之一：Top K问题。这节课我们来看看堆的另一种经典考察模板：k路合并。 核心算法——k路合并 k路合并一般会涉及到多个已排序的链表或者数组。这类题的特征比较明显，一旦出现K个排序好的列表，我们大概率可以利用堆来进行高效遍历：">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-16T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.661Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Heap">
+<meta property="article:tag" content="Priority Queue">
+<meta property="article:tag" content="K-way Merge">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/","path":"Day 15 - PriorityQueue 优先队列 & Heap 堆 2/","title":"Day 15 - PriorityQueue 优先队列 & Heap 堆 2"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 15 - PriorityQueue 优先队列 & Heap 堆 2 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 15 - PriorityQueue 优先队列 &amp; Heap 堆 2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E8%8A%82%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.1.</span> <span class="nav-text">章节导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94k%E8%B7%AF%E5%90%88%E5%B9%B6"><span class="nav-number">1.2.</span> <span class="nav-text">核心算法——k路合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-k%E8%B7%AF%E5%90%88%E5%B9%B6"><span class="nav-number">1.3.</span> <span class="nav-text">1.案例: k路合并</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E6%9C%89%E5%BA%8F%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E7%AC%ACK%E5%B0%8F%E5%85%83%E7%B4%A0"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 有序矩阵中的第K小元素</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E6%9C%80%E5%B0%8F%E8%8C%83%E5%9B%B4"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 最小范围</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-%E6%9F%A5%E6%89%BE%E5%92%8C%E6%9C%80%E5%B0%8F%E7%9A%84K%E5%AF%B9%E6%95%B0%E5%AD%97"><span class="nav-number">1.6.</span> <span class="nav-text">4.案例: 查找和最小的K对数字</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.8.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 15 - PriorityQueue 优先队列 & Heap 堆 2 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 15 - PriorityQueue 优先队列 & Heap 堆 2
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-16 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-16T00:00:00-07:00">2025-05-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 15 - PriorityQueue 优先队列 &amp; Heap 堆 2</h1>
+<h2 id="章节导读">章节导读</h2>
+<p>上节课我们介绍了优先队列和二叉堆的基础知识，并且重点介绍了堆的经典考察模板之一：Top K问题。这节课我们来看看堆的另一种经典考察模板：k路合并。</p>
+<h2 id="核心算法——k路合并">核心算法——k路合并</h2>
+<p>k路合并一般会涉及到多个已排序的链表或者数组。这类题的特征比较明显，一旦出现K个排序好的列表，我们大概率可以利用堆来进行高效遍历：</p>
+<ol>
+<li>初始化一个最小堆</li>
+<li>将所有的列表的第一个（最小的）元素加入堆中</li>
+<li>从堆中弹出一个最小的元素（这个元素就是当前的全局最小元素），将该元素的下一位插入堆中</li>
+<li>重复步骤3直到堆为空</li>
+</ol>
+<h2 id="1-案例-k路合并">1.案例: k路合并</h2>
+<blockquote>
+<p>合并k个排序链表，并且返回合并后的排序链表。</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>本题是2.2节中合并链表题的进阶题。原题要求我们合并两个已排序的链表。当时我们使用两根指针p1, p2分别指向两个链表的表头，并且依据两根指针类题目中“谁小移谁”的思路。每次比较p1和p2的值，取出值较小的那个，append在新链表的结尾。然后将指针移到下一位，直到结尾。</p>
+<p>本题升级成了k个链表，我们遵循同样的思路。将所有链表的表头加入一个最小堆，最小堆会我们完成“谁小移谁”的部分。我们每次从最小堆中取出当前最小的表头，加入新链表的结尾。然后将该链表的表头移到下一位，重新加入最小堆，直到最小堆为空。</p>
+
+<ol>
+<li>将所有的列表的第一个（最小的）元素加入堆中</li>
+</ol>
+
+<ol start="2">
+<li>从堆中弹出一个最小的元素（这个元素就是当前的全局最小元素），将该元素的下一位插入堆中</li>
+</ol>
+
+<ol start="3">
+<li>重复上一步：从堆中弹出一个最小的元素，将该元素的下一位插入堆中</li>
+</ol>
+
+<ol start="4">
+<li>最终当堆为空时，得到合并后的排序链表</li>
+</ol>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> ListNode <span class="title function_">mergeKLists</span><span class="params">(ListNode[] lists)</span> &#123;</span><br><span class="line">    <span class="comment">// 维护一个最小堆</span></span><br><span class="line">    PriorityQueue&lt;ListNode&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((l1, l2) -&gt; l1.val - l2.val);</span><br><span class="line">    <span class="comment">// 将所有链表的表头加入最小堆</span></span><br><span class="line">    <span class="keyword">for</span> (ListNode list: lists) &#123;</span><br><span class="line">        <span class="keyword">if</span> (list != <span class="literal">null</span>)   heap.offer(list);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">dummy</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ListNode</span>(<span class="number">0</span>); <span class="comment">// 创建dummy node</span></span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">tail</span> <span class="operator">=</span> dummy;</span><br><span class="line">    <span class="keyword">while</span> (!heap.isEmpty()) &#123;</span><br><span class="line">        <span class="comment">// 每次从最小堆中取出当前最小的表头</span></span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">curt</span> <span class="operator">=</span> heap.poll();</span><br><span class="line">        <span class="comment">// 加入新链表的结尾</span></span><br><span class="line">        tail.next = curt;</span><br><span class="line">        tail = curt;</span><br><span class="line">        <span class="comment">// 将该链表的表头移到下一位，重新加入最小堆</span></span><br><span class="line">        <span class="keyword">if</span> (curt.next != <span class="literal">null</span>)</span><br><span class="line">            heap.add(curt.next);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dummy.next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n logk)，空间复杂度O(k)。k是链表的个数，也是最小堆的大小。</p>
+<h2 id="2-案例-有序矩阵中的第K小元素">2.案例: 有序矩阵中的第K小元素</h2>
+<blockquote>
+<p>给定一个 n x n 矩阵，每一行和每一列都按照升序排序，找出矩阵中的第k小元素。</p>
+<p>输入: K=5<br>
+[[2, 6, 8],<br>
+[3, 7, 10],<br>
+[5, 8, 11]]<br>
+输出: 7</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>本题给定了一个n x n的矩阵，并且每行每列都是按升序排列的，我们可以等价的看成n个已排序的列表。为了在n个已排序的列表中找到第k小的元素，我们利用k路合并法遍历这n个已排序列表。</p>
+<p>不同于上一题，本题的输入列表是一组数组。为了完成遍历，我们需要额外建立一个数据结构，保存遍历过程中的当前位置(col &amp; row)和当前位置指向的数值(value)。将所有行的第一个位置加入最小堆，然后利用k路合并法遍历。不停弹出元素，直到第k个最小元素出现。</p>
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 建立一个数据结构</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> row, col, value;</span><br><span class="line">    <span class="comment">// 保存遍历过程中的当前位置和数值</span></span><br><span class="line">    Node(<span class="type">int</span> r, <span class="type">int</span> c, <span class="type">int</span> v) &#123;</span><br><span class="line">        row = r;</span><br><span class="line">        col = c;</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">kthSmallest</span><span class="params">(<span class="type">int</span>[][] matrix, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">n</span> <span class="operator">=</span> matrix.length;</span><br><span class="line">    <span class="comment">// 维护一个按照当前数值排列的最小堆</span></span><br><span class="line">    PriorityQueue&lt;Node&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((node1, node2) -&gt; node1.value - node2.value);</span><br><span class="line">    <span class="comment">// 将所有行的第一个位置加入最小堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        heap.offer(<span class="keyword">new</span> <span class="title class_">Node</span>(i, <span class="number">0</span>, matrix[i][<span class="number">0</span>]));</span><br><span class="line">    <span class="comment">// 弹出前k-1个值</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; k - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="type">Node</span> <span class="variable">curt</span> <span class="operator">=</span> heap.poll();</span><br><span class="line">        <span class="comment">// 将该位置的下一位加入最小堆，如果已经到达当前行的最末一位则跳过</span></span><br><span class="line">        <span class="keyword">if</span> (curt.col != n - <span class="number">1</span>)</span><br><span class="line">            heap.offer(<span class="keyword">new</span> <span class="title class_">Node</span>(curt.row, curt.col + <span class="number">1</span>, matrix[curt.row][curt.col + <span class="number">1</span>]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回第k个值</span></span><br><span class="line">    <span class="keyword">return</span> heap.peek().value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(n logn)，空间复杂度O(n)</p>
+<p>使用最小堆的解法只利用了每行的升序，并没有利用列升序的信息。本题还有一种使用二分搜索的解法，利用了每行和每列的信息，感兴趣的读者可以作为习题。</p>
+<h2 id="3-案例-最小范围">3.案例: 最小范围</h2>
+<blockquote>
+<p>给定m个已排序的数组，找到一个最小范围，最小范围中包含每个数组的至少一个数。</p>
+<p>输入: L1=[1, 5, 8], L2=[4, 12], L3=[7, 8, 10]<br>
+输出: [4, 7]</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>为了寻找最小范围，我们需要同时确定范围的起点start和终点end。因为要满足最小范围中包含每个数组的至少一个数，并且数组已排序，我们可以将所有行的第一个位置加入最小堆，然后利用k路合并法遍历。同样是额外建立一个数据结构，保存遍历过程中的当前位置和数值。</p>
+<p>一个比较直观的认知是我们要找的范围是由最小堆里的最小值和最大值确定的，这两个值分别是范围的起点start和终点end。我们通过比较每一个插入堆的值，记录下最大的那个作为end。每一步从堆中取出的最小元素作为start，和上一步的end组成当前的范围，这个范围包含每个数组的至少一个数。我们通过一个额外的数组记录范围，并且每次获得新的范围都和之前的进行比较，最终得到所有范围中最小的。</p>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 建立一个数据结构</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> x, y, value;</span><br><span class="line">    <span class="comment">// 保存遍历过程中的当前位置和数值</span></span><br><span class="line">    Node(<span class="type">int</span> x, <span class="type">int</span> y, <span class="type">int</span> v) &#123;</span><br><span class="line">        <span class="built_in">this</span>.x = x;</span><br><span class="line">        <span class="built_in">this</span>.y = y;</span><br><span class="line">        <span class="built_in">this</span>.value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] smallestRange(List&lt;List&lt;Integer&gt;&gt; nums) &#123;</span><br><span class="line">    <span class="comment">// 维护一个按照当前数值排列的最小堆</span></span><br><span class="line">    PriorityQueue&lt;Node&gt; heap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;((node1, node2) -&gt; node1.value - node2.value);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">max</span> <span class="operator">=</span> Integer.MIN_VALUE;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.size(); i++) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> nums.get(i).get(<span class="number">0</span>);</span><br><span class="line">        <span class="comment">// 将所有列表的第一个位置加入最小堆</span></span><br><span class="line">        heap.offer(<span class="keyword">new</span> <span class="title class_">Node</span>(i, <span class="number">0</span>, value));</span><br><span class="line">        <span class="comment">// 通过比较每一个插入堆的值，记录下最大的</span></span><br><span class="line">        max = Math.max(value, max);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 一个额外的数组记录范围</span></span><br><span class="line">    <span class="type">int</span>[] ans = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (!heap.isEmpty()) &#123;</span><br><span class="line">        <span class="comment">// 每一步从堆中取出的最小元素</span></span><br><span class="line">        <span class="type">Node</span> <span class="variable">curt</span> <span class="operator">=</span> heap.poll();</span><br><span class="line">        <span class="comment">// 每次获得新的范围都和之前的进行比较</span></span><br><span class="line">        <span class="keyword">if</span> (ans == <span class="literal">null</span> || ans[<span class="number">1</span>] - ans[<span class="number">0</span>] &gt; max - curt.value)</span><br><span class="line">            ans = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;curt.value, max&#125;;</span><br><span class="line">        <span class="comment">// 如果到达当前列表的结尾，那么后面出现的range一定比现在大，结束循环</span></span><br><span class="line">        <span class="keyword">if</span> (curt.y == nums.get(curt.x).size() - <span class="number">1</span>)  <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> <span class="variable">value</span> <span class="operator">=</span> nums.get(curt.x).get(curt.y + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 将该位置的下一位加入最小堆</span></span><br><span class="line">        heap.offer(<span class="keyword">new</span> <span class="title class_">Node</span>(curt.x, curt.y + <span class="number">1</span>, value));</span><br><span class="line">        <span class="comment">// 比较每一个插入堆的值，记录下最大的</span></span><br><span class="line">        max = Math.max(value, max);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 最终得到所有范围中最小的</span></span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n logm)，空间复杂度O(m)。n是总共元素的个数，也是输入大小。m是列表的个数。</p>
+<h2 id="4-案例-查找和最小的K对数字">4.案例: 查找和最小的K对数字</h2>
+<blockquote>
+<p>给定两个以升序排列的数组, 找到和最小的k对数字。每对数字有两个来自不同数组的数字组成。</p>
+<p>输入: L1=[2,8,9], L2=[1,3,6], K=3<br>
+输出: [[2,1],[2,3],[2,6]]</p>
+</blockquote>
+<h3 id="思路分析-4">思路分析</h3>
+<p>本题涉及到两个已排序的数组，直觉上我们可以利用k路合并法遍历。但是仔细一想会发现遍历没什么用处。因为这其实是一道Top K类的问题。我们可以枚举所有成对的数字组合，加入最大堆中，然后选取最小的k对。</p>
+<p>套用Top K模板：</p>
+<ol>
+<li>维护一个最大堆，用于比较每对数字之和</li>
+<li>枚举所有成对的数字组合，加入最大堆中</li>
+<li>如果堆的大小超过k，那么弹出最小元素，保证堆大小不超过k。</li>
+<li>遍历完成后，堆里保存着最小的K对数字</li>
+</ol>
+<p>本题是为了提醒大家不要看到多个已排序的数组，就直接开始k路合并。还是应该认真分析题目的含义，以免走入思维误区。</p>
+<h3 id="代码实现-4">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">kSmallestPairs</span><span class="params">(<span class="type">int</span>[] nums1, <span class="type">int</span>[] nums2, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">    <span class="comment">// 维护一个最大堆，比较每对数字之和</span></span><br><span class="line">    PriorityQueue&lt;List&lt;Integer&gt;&gt; maxHeap = <span class="keyword">new</span> <span class="title class_">PriorityQueue</span>&lt;&gt;(</span><br><span class="line">        (p1, p2) -&gt; (p2.get(<span class="number">0</span>) + p2.get(<span class="number">1</span>)) - (p1.get(<span class="number">0</span>) + p1.get(<span class="number">1</span>)));</span><br><span class="line">    <span class="comment">//枚举所有成对的数字组合</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> m : nums1) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> n : nums2) &#123;</span><br><span class="line">            maxHeap.offer(Arrays.asList(m, n));</span><br><span class="line">            <span class="keyword">if</span> (maxHeap.size() &gt; k) <span class="comment">// 堆的大小超过k，那么弹出最小元素</span></span><br><span class="line">                maxHeap.poll();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回堆里保存着最小的K对数字</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(maxHeap);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>时间复杂度O(n<sup>2</sup> logk)，空间复杂度O(k). n是输入数组的大小，遍历两个数组枚举所有成对的数字组合需要O(n<sup>2</sup>). k是堆的大小，每次插入和移除消耗O(logk)</p>
+<h2 id="总结">总结</h2>
+<p>这节课我们介绍了堆的第二种经典考察模板：k路合并，并且与上一节的Top K问题进行了比较。k路合并的基本特征是出现K个排序好的列表，并且需要我们进行遍历。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>使用二分法查找有序矩阵中的第K小元素</li>
+<li>查找和最大的K对数字：给定两个以降序排列的数组, 找到和最大的k对数字</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Heap/" rel="tag"># Heap</a>
+              <a href="/myblog/tags/Priority-Queue/" rel="tag"># Priority Queue</a>
+              <a href="/myblog/tags/K-way-Merge/" rel="tag"># K-way Merge</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2014%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%201/" rel="prev" title="Day 14 - PriorityQueue 优先队列 & Heap 堆 1">
+                  <i class="fa fa-chevron-left"></i> Day 14 - PriorityQueue 优先队列 & Heap 堆 1
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2016%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%203/" rel="next" title="Day 16 - PriorityQueue 优先队列 & Heap 堆 3">
+                  Day 16 - PriorityQueue 优先队列 & Heap 堆 3 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2015%20-%20PriorityQueue%20%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%20&%20Heap%20%E5%A0%86%202/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

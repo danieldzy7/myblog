@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 10 - BST 二叉树3 上一节我们学习了DFS经典面试题。相对于DFS，广度优先搜索(BFS)是另一种使用广泛的搜索方式。这节课我们来看看BFS经典面试题。 基础知识——广度优先搜索 广度优先搜索BFS是不同于深度优先DFS的另一种搜索方式：BFS在每个节点会优先向邻近的节点延伸，覆盖全部的邻居节点之后，再从其中一个邻居节点向外延伸。 BFS没有递归写法需要借助队列(Queue)，我们">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 10 - BST 二叉树3">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 10 - BST 二叉树3 上一节我们学习了DFS经典面试题。相对于DFS，广度优先搜索(BFS)是另一种使用广泛的搜索方式。这节课我们来看看BFS经典面试题。 基础知识——广度优先搜索 广度优先搜索BFS是不同于深度优先DFS的另一种搜索方式：BFS在每个节点会优先向邻近的节点延伸，覆盖全部的邻居节点之后，再从其中一个邻居节点向外延伸。 BFS没有递归写法需要借助队列(Queue)，我们">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-11T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.664Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Binary Tree">
+<meta property="article:tag" content="BFS">
+<meta property="article:tag" content="Level Order">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/","path":"Day 10 - BST 二叉树3/","title":"Day 10 - BST 二叉树3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 10 - BST 二叉树3 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 10 - BST 二叉树3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E2%80%94%E2%80%94%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="nav-number">1.1.</span> <span class="nav-text">基础知识——广度优先搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B1%82%E6%AC%A1%E9%81%8D%E5%8E%86"><span class="nav-number">1.2.</span> <span class="nav-text">1.案例: 二叉树的层次遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E6%9C%80%E5%B0%8F%E6%B7%B1%E5%BA%A6"><span class="nav-number">1.3.</span> <span class="nav-text">2.案例: 最小深度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E5%AF%BB%E6%89%BE%E6%A0%91%E4%B8%AD%E5%8F%B3%E4%BE%A7%E6%9C%80%E8%BF%91%E8%8A%82%E7%82%B9"><span class="nav-number">1.4.</span> <span class="nav-text">3.案例: 寻找树中右侧最近节点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-right-sibling-tree"><span class="nav-number">1.5.</span> <span class="nav-text">4.案例: right-sibling tree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-4"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.7.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 10 - BST 二叉树3 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 10 - BST 二叉树3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-11 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-11T00:00:00-07:00">2025-05-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 10 - BST 二叉树3</h1>
+<p>上一节我们学习了DFS经典面试题。相对于DFS，广度优先搜索(BFS)是另一种使用广泛的搜索方式。这节课我们来看看BFS经典面试题。</p>
+<h2 id="基础知识——广度优先搜索">基础知识——广度优先搜索</h2>
+<p>广度优先搜索BFS是不同于深度优先DFS的另一种搜索方式：BFS在每个节点会优先向邻近的节点延伸，覆盖全部的邻居节点之后，再从其中一个邻居节点向外延伸。</p>
+<p>BFS没有递归写法需要借助队列(Queue)，我们会在之后的章节专门讲解Queue这种结构，现在我们只需要知道它是一种先进先出的结构</p>
+<ol>
+<li>初始化一个Queue，将根节点放入其中</li>
+<li>只要Queue不为空，执行以下循环<br>
+2.1. 从Queue中取出一个节点<br>
+2.2. 如果该节点存在左右分支，则分别加入Queue中<br>
+2.3. 访问该节点</li>
+</ol>
+
+<p><em>图片由visualgo制作</em></p>
+<p>模板代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">bfs</span><span class="params">(TreeNode node)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (node == <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  </span><br><span class="line">  Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;(); <span class="comment">// 初始化一个Queue</span></span><br><span class="line">  queue.offer(root); <span class="comment">// 将根节点放入其中</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (!queue.isEmpty()) &#123; <span class="comment">// 只要Queue不为空</span></span><br><span class="line">    <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> queue.poll(); <span class="comment">// 从Queue中取出一个节点</span></span><br><span class="line">    <span class="keyword">if</span> (curt.left != <span class="literal">null</span>) <span class="comment">// 加入左分支</span></span><br><span class="line">      queue.offer(curt.left);</span><br><span class="line">    <span class="keyword">if</span> (curt.right != <span class="literal">null</span>) <span class="comment">// 加入右分支</span></span><br><span class="line">      queue.offer(curt.right);</span><br><span class="line"></span><br><span class="line">    doSomething(curt); <span class="comment">// 访问该节点</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们简单对比一下Stack和Queue两种结构：</p>
+<table>
+<thead>
+<tr>
+<th>数据结构</th>
+<th>算法</th>
+<th>顺序</th>
+<th>实现</th>
+<th>Java内置</th>
+<th>加入一个元素</th>
+<th>移除一个元素</th>
+<th>查看下一个元素</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stack</td>
+<td>DFS深度优先</td>
+<td>LIFO后进先出</td>
+<td>Stack/ArrayDeque</td>
+<td>实现</td>
+<td>push</td>
+<td>pop</td>
+<td>peek</td>
+</tr>
+<tr>
+<td>Queue</td>
+<td>BFS广度优先</td>
+<td>FIFO先进先出</td>
+<td>LinkedList/ArrayDeque</td>
+<td>接口</td>
+<td>offer</td>
+<td>poll</td>
+<td>peek</td>
+</tr>
+</tbody>
+</table>
+<p>在之后的章节里，我们还会见到这张表更复杂的版本，目前我们只需要记住Stack对应DFS，Queue对应BFS。</p>
+<ul>
+<li>Stack在java中存在已经实现好的数据结构，可以直接使用（java内置的Stack实现来自早期版本，在工作中并不推荐使用，但是在面试时可以拿来直接用，降低难度）。</li>
+<li>Queue在java中是一个接口的形式，没有可以直接使用Queue的数据结构。比较接近的是实现了Queue接口的双端队列ArrayDeque（推荐，效率高），我们之前学过的链表LinkedList也实现了Queue接口，可以当做Queue使用。</li>
+<li>ArrayDeque 是java中内置的双端队列，效率很高，可以从两端进行操作，兼容了Stack和Queue的API。</li>
+</ul>
+<p>模板代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Stack</span> <span class="variable">stack</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Stack</span>(); <span class="comment">// java内置了Stack结构</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ArrayDeque 兼容了Stack和Queue的API, 可以从两端进行操作</span></span><br><span class="line"><span class="type">Deque</span> <span class="variable">stack</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>();</span><br><span class="line"><span class="type">Deque</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>();</span><br><span class="line"></span><br><span class="line"><span class="comment">// LinkedList也实现了Queue接口</span></span><br><span class="line"><span class="type">Queue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LinkedList</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="1-案例-二叉树的层次遍历">1.案例: 二叉树的层次遍历</h2>
+<blockquote>
+<p>给出一棵二叉树，返回其节点值的层次遍历（逐层从左往右访问）</p>
+<p>输入: <br>
+输出:[[1], [2, 3], [4, 5, 6, 7]]</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>本题是BFS的经典题，几乎所有BFS的题目都可以当做是本题的变种。题目要求我们返回二叉树的层次遍历，也就是要求我们用BFS的方式，分层访问所有节点。我们在每一层需要一个列表来保存当前层的所有节点。因此我们需要对原有的模板做一些修改。</p>
+<p>我们在按照BFS横向访问时，会将每个节点的左右子树添加入队列。初始化时，只包含根节点。而访问根节点之后，将根节点从队列中移除，此时队列中剩下根节点的左右子节点，即第二层所有节点。</p>
+
+<p>此时队列中只包含第二层的两个节点，当这两个节点被访问后，队列中只剩下第三层的4个节点，以此类推。这样我们发现，只要每次限制从队列中拿出的节点的个数，我们就可以保证每次只访问同一层的节点，达到层次遍历的效果。</p>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">levelOrder</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; ans = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>) </span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line"></span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;(); <span class="comment">// 使用ArrayDeque作为Queue的实现</span></span><br><span class="line">    queue.offer(root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> queue.size();</span><br><span class="line">        List&lt;Integer&gt; line = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size; i++) &#123; <span class="comment">// 增加一个额外的限制，每次for循环只访问同一层</span></span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (curt.left != <span class="literal">null</span>) queue.offer(curt.left);</span><br><span class="line">            <span class="keyword">if</span> (curt.right != <span class="literal">null</span>) queue.offer(curt.right);</span><br><span class="line"></span><br><span class="line">            line.add(curt.val);</span><br><span class="line">        &#125;</span><br><span class="line">        ans.add(line); <span class="comment">// 将同一层的节点，加入最终的ans列表</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<p>与DFS相同，我们使用bfs访问了所有的节点，所以消耗了O(n)的时间。空间上，二叉树最差情况可能退化成一根链表，所以空间复杂度为O(n)</p>
+<h2 id="2-案例-最小深度">2.案例: 最小深度</h2>
+<blockquote>
+<p>给定一棵二叉树，返回最小深度。</p>
+<p>输入: <br>
+输出: 2</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>二叉树的最小深度是从根节点到最近叶子节点的最短路径上的节点数量。这道题等价于从根节点出发，计算走到最近的叶子节点的距离。所以我们需要对上一题的遍历模板做一些改动，增加一个额外变量depth，记录从起点出发BFS向外扩展的距离</p>
+
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">minDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line">    queue.offer(root);</span><br><span class="line">    <span class="type">int</span> <span class="variable">depth</span> <span class="operator">=</span> <span class="number">1</span>; <span class="comment">// 增加一个额外变量depth，记录从起点出发BFS向外扩展的距离</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> queue.size(); </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (curt.left == <span class="literal">null</span> &amp;&amp; curt.right == <span class="literal">null</span>) <span class="comment">// 遇到叶子节点</span></span><br><span class="line">                <span class="keyword">return</span> depth; <span class="comment">// 遇到的第一个叶子节点就是深度最浅的叶子节点</span></span><br><span class="line">            <span class="keyword">if</span> (curt.left != <span class="literal">null</span>) queue.offer(curt.left);</span><br><span class="line">            <span class="keyword">if</span> (curt.right != <span class="literal">null</span>) queue.offer(curt.right);</span><br><span class="line">        &#125;</span><br><span class="line">        depth++; <span class="comment">// 深度加一</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="3-案例-寻找树中右侧最近节点">3.案例: 寻找树中右侧最近节点</h2>
+<blockquote>
+<p>给定一棵二叉树和一个节点u，返回节点u右侧的第一个节点（如果u是最右侧节点，则返回null）</p>
+<p>输入: <br>
+输出: 6</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>有了前两题做铺垫，本题其实并不难。本题的关键在于定义右侧最近节点：如果节点u是最右侧节点，那么右侧对应节点为null；否则是u右侧第一个有效节点。根据BFS的访问顺序，同层的下一个右侧节点，即是队列中下一个即将访问的节点。</p>
+
+<ol>
+<li>根据BFS的顺序，每层从左到右访问节点</li>
+<li>直到遇到节点u，判断u是否是最右侧节点<br>
+2.1. 如果是最右侧节点，那么返回null<br>
+2.2. 否则返回队列中的下一个节点</li>
+</ol>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> TreeNode <span class="title function_">findNearestRightNode</span><span class="params">(TreeNode root, TreeNode u)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line">    queue.offer(root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (curt.left != <span class="literal">null</span>) queue.offer(curt.left);</span><br><span class="line">            <span class="keyword">if</span> (curt.right != <span class="literal">null</span>) queue.offer(curt.right);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (curt == u) <span class="comment">// 遇到节点u，判断u是否是最右侧节点</span></span><br><span class="line">              <span class="keyword">return</span> i == size - <span class="number">1</span> ? <span class="literal">null</span> : queue.peek();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="4-案例-right-sibling-tree">4.案例: right-sibling tree</h2>
+<blockquote>
+<p>给定一棵二叉树，将它转化成right-sibling表示法。</p>
+<p>输入:</p>
+
+<p>输出:</p>
+
+</blockquote>
+<h3 id="思路分析-4">思路分析</h3>
+<p>LCRS树（left-child right-sibling binary tree，左孩子右兄弟树）是n叉树的一种表现方式，每个节点包含两根指针，但是拥有多个子节点。结构与普通二叉树相同，每个节点包含left和right两根指针。不同的是，left指针指向当前节点的第一个子节点，同一层的子节点之间通过right指针相连。</p>
+<p>所以以下两种n叉树是等价的：</p>
+
+<p>LCRS表示法：</p>
+
+<p><em>图片来源geeksforgeeks</em></p>
+<p>本题要求我们将一棵二叉树转化成right-sibling表示法（不完全的LCRS树）。根据定义我们可以保持left指针不变，但是right指针需要指向同级的右侧节点。需要注意的是，right指针指向同级的右侧节点，如果当前节点右侧位置是null，那么right指向null（而第三题的解法会指向下一个有效节点）。所以我们需要对第三题的解法做出进一步修改。</p>
+<p>之前的解法中，我们一直在使用ArrayDeque，因为ArrayDeque效率更高。但是ArrayDeque有一个缺点，就是ArrayDeque不能接受一个null对象。在这题中，我们使用LinkedList代替ArrayDeque，LinkedList可以接受null对象。这样如果当前节点右侧位置是null，那么right指针指向队列的下一个节点时可以直接得到null对象。</p>
+<h3 id="代码实现-4">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> TreeNode <span class="title function_">rightSiblingTree</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>)	<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;(); <span class="comment">// 使用LinkedList代替ArrayDeque</span></span><br><span class="line">    queue.offer(root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!queue.isEmpty()) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> queue.size();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> queue.poll();</span><br><span class="line">            <span class="keyword">if</span> (curt == <span class="literal">null</span>) <span class="keyword">continue</span>; <span class="comment">// 在获取节点时，检查是否为null</span></span><br><span class="line">            queue.offer(curt.left); <span class="comment">// 直接加入左右节点</span></span><br><span class="line">            queue.offer(curt.right); <span class="comment">// 左右节点可能为null</span></span><br><span class="line">            curt.right = i != size - <span class="number">1</span> ? queue.peek() : <span class="literal">null</span>; <span class="comment">// 最右侧节点的right直接指向null</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="总结">总结</h2>
+<p>这节课我们学习了二叉树的经典考察模板BFS遍历在面试题中的应用。下节课我们来看看大厂面试中出现过的二叉树面试题。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>给定一棵二叉树，按照锯齿形层次遍历（先从左往右，下一层再从右往左，层与层之间交替进行），返回所有节点值</li>
+<li>给定一棵二叉树，以列表的形式返回每层的平均值。</li>
+<li>给定一棵二叉树，以列表的形式返回每层的最大值。</li>
+<li>给定一棵二叉树，从右向左看，返回从右侧所能看到的节点值（按照从顶部到底部的顺序）</li>
+<li>给定一棵二叉树，找到这棵树最中最后一行中最左边的值</li>
+<li>给定一棵二叉树，每个节点拥有一个额外的next指针，初始时next指针指向null。将next指针指向每个节点右侧的下一个节点。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Binary-Tree/" rel="tag"># Binary Tree</a>
+              <a href="/myblog/tags/BFS/" rel="tag"># BFS</a>
+              <a href="/myblog/tags/Level-Order/" rel="tag"># Level Order</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%209%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%912/" rel="prev" title="Day 9 - BST 二叉树2">
+                  <i class="fa fa-chevron-left"></i> Day 9 - BST 二叉树2
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2011%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%914/" rel="next" title="Day 11 - BST 二叉树4">
+                  Day 11 - BST 二叉树4 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2010%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%913/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

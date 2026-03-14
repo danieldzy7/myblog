@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 12 - Stack 栈 本章我们来学习三种队列类的数据结构：Stack栈、Queue队列、Heap堆。这三种结构的相关性并不体现在代码上，而体现在逻辑层面和使用层面。他们都可以加入一个元素，移除一个元素，访问但不删除下一个元素。简单来说，Stack、Queue、Heap可以被看做三种不同的队列：Stack是后进先出队列，Queue是先进先出队列，Heap是按照优先级排列的队列。（这里为了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 12 - Stack 栈">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2012%20-%20Stack%20%E6%A0%88/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 12 - Stack 栈 本章我们来学习三种队列类的数据结构：Stack栈、Queue队列、Heap堆。这三种结构的相关性并不体现在代码上，而体现在逻辑层面和使用层面。他们都可以加入一个元素，移除一个元素，访问但不删除下一个元素。简单来说，Stack、Queue、Heap可以被看做三种不同的队列：Stack是后进先出队列，Queue是先进先出队列，Heap是按照优先级排列的队列。（这里为了">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-13T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.662Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Stack">
+<meta property="article:tag" content="Monotonic Stack">
+<meta property="article:tag" content="LIFO">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2012%20-%20Stack%20%E6%A0%88/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2012%20-%20Stack%20%E6%A0%88/","path":"Day 12 - Stack 栈/","title":"Day 12 - Stack 栈"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 12 - Stack 栈 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 12 - Stack 栈</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E2%80%94%E2%80%94%E6%A0%88"><span class="nav-number">1.1.</span> <span class="nav-text">基础知识——栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7%E5%BA%8F%E5%88%97"><span class="nav-number">1.2.</span> <span class="nav-text">1.案例: 有效的括号序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.2.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.2.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E5%8D%95%E8%B0%83%E6%A0%88"><span class="nav-number">1.3.</span> <span class="nav-text">核心算法——单调栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E6%9C%80%E5%B0%8F%E5%80%BC%E6%9C%80%E5%A4%A7%E5%80%BC%E6%93%8D%E4%BD%9C%E6%A0%88"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 最小值最大值操作栈</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%901"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B01"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%902"><span class="nav-number">1.4.3.</span> <span class="nav-text">思路分析2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B02"><span class="nav-number">1.4.4.</span> <span class="nav-text">代码实现2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.5.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A4%A7%E7%9A%84%E6%95%B0"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 下一个更大的数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.7.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2012%20-%20Stack%20%E6%A0%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 12 - Stack 栈 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 12 - Stack 栈
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-13T00:00:00-07:00">2025-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2012%20-%20Stack%20%E6%A0%88/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2012%20-%20Stack%20%E6%A0%88/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 12 - Stack 栈</h1>
+<p>本章我们来学习三种队列类的数据结构：Stack栈、Queue队列、Heap堆。这三种结构的相关性并不体现在代码上，而体现在逻辑层面和使用层面。他们都可以加入一个元素，移除一个元素，访问但不删除下一个元素。简单来说，Stack、Queue、Heap可以被看做三种不同的队列：Stack是后进先出队列，Queue是先进先出队列，Heap是按照优先级排列的队列。（这里为了避免队列这个词出现歧义，我用Queue表示先进先出的数据结构，用队列表示数据加入/删除的顺序结合）</p>
+<p>这三种结构经常被拿来作比较，通常在教科书中会被看做三个不同的考点。但是在面试时，这三种结构可以被放在图论这个大类下，在某些情况下甚至可以出现在同一题里。Stack栈、Queue队列、Heap堆是必须要掌握的数据结构。</p>
+<h2 id="基础知识——栈">基础知识——栈</h2>
+<p>Stack 栈可以看做是一种特殊的线性表，所有的操作（访问、插入、删除）只能在栈顶进行，按照后进先出（LIFO, Last In First Out）的顺序运作。所以使用ArrayList实现栈比使用LinkedList实现更加高效。在Java中，Stack的实现是基于Vector类，而Vector类的写法类似于ArrayList。</p>
+<p>Stack的主要API有三个：push插入, pop删除, peek访问。</p>
+<ol>
+<li>push只能将元素插入栈顶。</li>
+</ol>
+
+<p><em>图片由visualgo制作</em></p>
+<ol start="2">
+<li>pop只能将栈顶元素移除。</li>
+</ol>
+
+<p><em>图片由visualgo制作</em></p>
+<ol start="3">
+<li>peek访问返回栈顶元素，但是不删除。</li>
+</ol>
+<h2 id="1-案例-有效的括号序列">1.案例: 有效的括号序列</h2>
+<blockquote>
+<p>给定一个字符串所表示的括号序列，包含以下字符： ‘(’, ‘)’, ‘{’, ‘}’, ‘[’ , ‘]’，判定是否是有效的括号序列。括号必须依照&quot;()“顺序表示，”()[]{}“是有效的括号，”([)]&quot;是无效的括号。</p>
+<p>输入:string = “([])(){}(())()()”<br>
+输出: true</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>这道题是Stack的基础运用。输入是一个string，在本题中它相当于一个char数组。输入的范围仅包括有效的括号字符: ( , ) , { , } , [ , ] . 为了判断输入的括号序列是否有效，我们需要确保每一个开括号都对应一个闭括号，并且开括号的顺序和闭括号的顺序相反。</p>
+<p>因此我们需要遍历每个字符，如果遇到的是开括号 ( , { , [ ，那么我们将它压栈。如果我们遇到的是闭括号 ) , } , ] ，那么我们需要与前一个开括号进行比较，确保他们成对。对于成功配对的括号，我们可以将他们从栈中删除。否则说明收到的序列不是有效括号序列。</p>
+
+<p>最后如果栈中没有额外的括号留下，那么整个序列是有效括号序列。</p>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isValid</span><span class="params">(String s)</span> &#123;</span><br><span class="line">    <span class="comment">// 创建一个栈</span></span><br><span class="line">    Stack&lt;Character&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 遍历每一个字符</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> c : s.toCharArray()) &#123;</span><br><span class="line">        <span class="comment">// 如果遇到的是开括号，将它压栈</span></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">&#x27;(&#x27;</span> || c == <span class="string">&#x27;[&#x27;</span> || c == <span class="string">&#x27;&#123;&#x27;</span>) &#123;</span><br><span class="line">            stack.push(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果遇到的是闭括号 ，需要与前一个开括号进行比较，确保成对</span></span><br><span class="line">        <span class="keyword">if</span> (c == <span class="string">&#x27;)&#x27;</span> || c == <span class="string">&#x27;]&#x27;</span> || c == <span class="string">&#x27;&#125;&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">// 确保存在至少一个开括号</span></span><br><span class="line">            <span class="comment">// 并且该开括号与当前闭括号成对</span></span><br><span class="line">            <span class="comment">// 这里我们利用他们在ASCII码中的位置，快速判断是否成对</span></span><br><span class="line">            <span class="keyword">if</span> (stack.isEmpty() || Math.abs(stack.pop() - c) &gt; <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果栈中没有额外的括号留下，那么是有效括号序列。</span></span><br><span class="line">    <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)。我们需要遍历整个输入的string，并且最差情况下需要将所有字符存在栈中。</p>
+<h2 id="核心算法——单调栈">核心算法——单调栈</h2>
+<p>Monotone Stack 单调栈，栈内元素都是单调递增或者单调递减的，有时候甚至是严格的单调递增或递减。从单调栈中获取元素，元素满足单调性。单调栈是Stack类考题中最常出现的解题技巧。</p>
+<h2 id="2-案例-最小值最大值操作栈">2.案例: 最小值最大值操作栈</h2>
+<blockquote>
+<p>实现一个栈，要求 O(1) 开销, 支持以下操作:</p>
+<ul>
+<li>push(val) 将 val 压入栈</li>
+<li>pop() 将栈顶元素弹出, 并返回这个弹出的元素</li>
+<li>peek() 获得栈顶元素</li>
+<li>getMin() —— 获得栈中的最小元素。</li>
+<li>getMax() —— 获得栈中的最大元素。</li>
+</ul>
+<p>Sample:<br>
+MinMaxStack(): -<br>
+push(5): -<br>
+getMin(): 5<br>
+getMax(): 5<br>
+peek(): 5<br>
+push(7): -<br>
+getMin(): 5<br>
+getMax(): 7<br>
+peek(): 7<br>
+push(2): -<br>
+getMin(): 2<br>
+getMax(): 7<br>
+peek(): 2<br>
+pop(): 2<br>
+pop(): 7<br>
+getMin(): 5<br>
+getMax(): 5<br>
+peek(): 5</p>
+</blockquote>
+<h3 id="思路分析1">思路分析1</h3>
+<p>本题是单调栈的经典题型，要求我们实现的栈可以直接读取最大/最小元素。实际上，题目的含义是要求我们实现一个Stack用三个Stack的功能：正常Stack + 单调增Stack + 单调减Stack。</p>
+<p>我们可以直接顺着这个思路来解题，初始化三个Stack：一个普通Stack + 两个单调栈（一个维护升序，一个维护降序）。单调升序栈每次只加入比上一个元素更大的元素，单调降序栈每次只加入比上一个元素更小的元素。peek(), getMin(), getMax()分别从三个栈获取栈顶元素。每次push一个新元素入栈时：</p>
+<ul>
+<li>普通stack直接压栈</li>
+<li>单调升序栈将当前元素与上一个元素相比较，如果当前元素更大则压栈当前元素，否则复制一份前一个元素</li>
+<li>单调降序栈将当前元素与上一个元素相比较，如果当前元素更小则压栈当前元素，否则复制一份前一个元素</li>
+</ul>
+<p>对于本题而言，单调序列和严格单调序列都可以完成解题，相比之下，非严格单调序列的实现更加简单易懂。</p>
+
+<h3 id="代码实现1">代码实现1</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinMaxStack</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化三个Stack：一个普通Stack + 两个单调栈</span></span><br><span class="line">    <span class="keyword">private</span> Stack&lt;Integer&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;Integer&gt; min = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> Stack&lt;Integer&gt; max = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">peek</span><span class="params">()</span> &#123; <span class="comment">// 从普通栈获取栈顶元素</span></span><br><span class="line">        <span class="keyword">return</span> stack.peek();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> stack.pop();</span><br><span class="line">        min.pop();</span><br><span class="line">        max.pop();</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(Integer x)</span> &#123;</span><br><span class="line">        <span class="comment">// 单调降序栈：如果当前元素更小则压栈当前元素，否则复制前一个元素</span></span><br><span class="line">        min.push(stack.isEmpty() ? x : Math.min(x, min.peek()));</span><br><span class="line">        <span class="comment">// 单调升序栈：如果当前元素更大则压栈当前元素，否则复制前一个元素</span></span><br><span class="line">        max.push(stack.isEmpty() ? x : Math.max(x, max.peek()));</span><br><span class="line">        <span class="comment">// 普通stack直接压栈</span></span><br><span class="line">        stack.push(x);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getMin</span><span class="params">()</span> &#123; <span class="comment">// 从降序栈获取栈顶元素</span></span><br><span class="line">        <span class="keyword">return</span> min.peek();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getMax</span><span class="params">()</span> &#123; <span class="comment">// 从升序栈获取栈顶元素</span></span><br><span class="line">        <span class="keyword">return</span> max.peek();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="思路分析2">思路分析2</h3>
+<p>解法1存在一个缺陷：随着要求保存的特性越多，需要同时维护的栈越多。本题中只要求增加了获取最大/最小值的操作，我们额外多维护了两个栈。如果题目中加入更多要求：增加获取当前平均值的函数getMean(), 获取当前第三大的值get3rdMax()…这样我们需要同时维护更多的栈。</p>
+<p>一个应对的解决方法是只是用一个栈，但是这个栈并不保存数据本身，而是保存一个对象。该对象包含了我们所有需要的特性。一个取巧的方法是使用数组，数组第1位保存当前数值，第2位保存当前最小值，第3位保存当前最大值。我们可以根据需求修改数组，并且只需要维护一个栈。</p>
+<h3 id="代码实现2">代码实现2</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MinMaxStack</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化一个栈</span></span><br><span class="line">    <span class="keyword">private</span> Stack&lt;<span class="type">int</span>[]&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">peek</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 数组第1位保存当前数值</span></span><br><span class="line">        <span class="keyword">return</span> stack.peek()[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">pop</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> stack.pop()[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(Integer x)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (stack.isEmpty()) &#123;</span><br><span class="line">            stack.push(<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;x, x, x&#125;);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span>[] curt = stack.peek();</span><br><span class="line">        <span class="comment">// 在压栈时和前一位数值进行比较，构造新的数据对象</span></span><br><span class="line">        stack.push(<span class="keyword">new</span> <span class="title class_">int</span>[]&#123;x, Math.min(x, curt[<span class="number">1</span>]), Math.max(x, curt[<span class="number">2</span>])&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getMin</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 数组第2位保存当前最小值</span></span><br><span class="line">        <span class="keyword">return</span> stack.peek()[<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getMax</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 数组第3位保存当前最大</span></span><br><span class="line">        <span class="keyword">return</span> stack.peek()[<span class="number">2</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(1)，空间复杂度O(1)。每一步操作消耗的时间和空间在数量级上与单个Stack操作一致。</p>
+<h2 id="3-案例-下一个更大的数">3.案例: 下一个更大的数</h2>
+<blockquote>
+<p>有两个数组 nums1和nums2（互不重复），其中nums1是nums2的子集。 在nums2的相应位置找到nums1所有元素的下一个更大数字。nums1中的数字x的下一个更大数字是nums2中x右边第一个更大的数字。 如果它不存在，则为此数字输出-1。</p>
+<p>输入: nums1 = [4,1,3], nums2 = [1,3,4,2]<br>
+输出: [-1,3,4]</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>本题依旧是单调栈的运用。给定的是一组输入nums1和一组数据集合nums2。要求在nums2中找到每个数字的下一个更大的数，然后按照nums1的顺序输出。</p>
+<p>因此我们先针对nums2，利用单调栈来建立每个数字和它下一个更大数的对应关系。再按照nums1的数字输出最终结果。寻找数字x的下一个更大数y，等价于寻找y的前一个稍小的数x。而前一个稍小的数x，其实是在y出现之前的最大值。有了这层对应关系，我们就可以利用之前我们学的单调栈的实现方法。</p>
+<ol>
+<li>初始化一个Stack作为单调栈。</li>
+<li>遍历nums2，对于每个数字<br>
+2.1. 如果栈顶数字小于当前数字，则当前数字是栈顶数字的下一个更大数。<br>
+2.2. 弹出栈顶数字，利用map保存对应关系。跳转到步骤2.1<br>
+2.3. 如果栈顶数字大于当前数字，压栈，维护单调性</li>
+<li>遍历nums1，对于每个数字，在map中寻找对应的下一个更大数，如果不存在则返回-1.</li>
+</ol>
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] nextGreaterElement(<span class="type">int</span>[] nums1, <span class="type">int</span>[] nums2) &#123;</span><br><span class="line">    HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 初始化一个Stack作为单调栈。</span></span><br><span class="line">    Stack&lt;Integer&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> n : nums2) &#123; <span class="comment">// 遍历nums2</span></span><br><span class="line">        <span class="keyword">while</span> (!stack.isEmpty() &amp;&amp; n &gt; stack.peek()) <span class="comment">// 如果栈顶数字小于当前数字</span></span><br><span class="line">            map.put(stack.pop(), n); <span class="comment">// 弹出栈顶数字，利用map保存对应关系</span></span><br><span class="line">        stack.push(n); <span class="comment">// 如果栈顶数字大于当前数字，压栈</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span>[] ans = <span class="keyword">new</span> <span class="title class_">int</span>[nums1.length];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums1.length; i++) <span class="comment">// 遍历nums1</span></span><br><span class="line">        ans[i] = map.getOrDefault(nums1[i], -<span class="number">1</span>); <span class="comment">// 在map中寻找对应的下一个更大数，不存在则返回-1</span></span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="总结">总结</h2>
+<p>这节课我们学习了经典的Stack结构和常见考点单调栈在面试题中的应用。下节课将对比队列与栈的考题。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>最小值操作栈：实现一个栈，要求 O(1) 开销, 支持以下操作:</li>
+</ol>
+<ul>
+<li>push(val) 将 val 压入栈</li>
+<li>pop() 将栈顶元素弹出, 并返回这个弹出的元素</li>
+<li>peek() 获得栈顶元素</li>
+<li>getMin() —— 获得栈中的最小元素。</li>
+</ul>
+<ol start="2">
+<li>下一个更大的数2：给出一个循环数组，找到每个元素的下一个更大的数。 如果它不存在，则为此数字输出-1。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Stack/" rel="tag"># Stack</a>
+              <a href="/myblog/tags/Monotonic-Stack/" rel="tag"># Monotonic Stack</a>
+              <a href="/myblog/tags/LIFO/" rel="tag"># LIFO</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2011%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%914/" rel="prev" title="Day 11 - BST 二叉树4">
+                  <i class="fa fa-chevron-left"></i> Day 11 - BST 二叉树4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2013%20-%20Queue%20%E9%98%9F%E5%88%97/" rel="next" title="Day 13 - Queue 队列">
+                  Day 13 - Queue 队列 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2012%20-%20Stack%20%E6%A0%88/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

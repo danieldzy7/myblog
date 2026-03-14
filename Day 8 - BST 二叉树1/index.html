@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 08 - BST 二叉树1 在前面的章节里，我们学习了链表和数组两种数据结构。他们的共同点是其中保存的元素符合某种顺序：存在第一个和最后一个元素，并且可以通过指针指向前一位或者后一位来遍历整个集合。这一类结构一般称为线性结构。 从本章开始，我们要开始接触非线性结构，这里我们从二叉树开始。 基础知识——二叉树 树类结构，是链表结构的衍生。二叉树是每个节点存在最多两个分支的树结构。（单链表则是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 8 - BST 二叉树1">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 08 - BST 二叉树1 在前面的章节里，我们学习了链表和数组两种数据结构。他们的共同点是其中保存的元素符合某种顺序：存在第一个和最后一个元素，并且可以通过指针指向前一位或者后一位来遍历整个集合。这一类结构一般称为线性结构。 从本章开始，我们要开始接触非线性结构，这里我们从二叉树开始。 基础知识——二叉树 树类结构，是链表结构的衍生。二叉树是每个节点存在最多两个分支的树结构。（单链表则是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-09T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.664Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Binary Tree">
+<meta property="article:tag" content="Traversal">
+<meta property="article:tag" content="DFS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/","path":"Day 8 - BST 二叉树1/","title":"Day 8 - BST 二叉树1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 8 - BST 二叉树1 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 08 - BST 二叉树1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E2%80%94%E2%80%94%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="nav-number">1.1.</span> <span class="nav-text">基础知识——二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E5%8F%89%E6%A0%91%E8%8A%82%E7%82%B9%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.1.</span> <span class="nav-text">二叉树节点的表示方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E2%80%94%E2%80%94%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2"><span class="nav-number">1.2.</span> <span class="nav-text">基础知识——深度优先搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">1.案例: 二叉树的前序遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 二叉树的中序遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 二叉树的后序遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="nav-number">1.6.</span> <span class="nav-text">4.案例: 二叉树迭代器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 8 - BST 二叉树1 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 8 - BST 二叉树1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-09 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-09T00:00:00-07:00">2025-05-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 08 - BST 二叉树1</h1>
+<p>在前面的章节里，我们学习了链表和数组两种数据结构。他们的共同点是其中保存的元素符合某种顺序：存在第一个和最后一个元素，并且可以通过指针指向前一位或者后一位来遍历整个集合。这一类结构一般称为线性结构。</p>
+<p>从本章开始，我们要开始接触非线性结构，这里我们从二叉树开始。</p>
+<h2 id="基础知识——二叉树">基础知识——二叉树</h2>
+<p>树类结构，是链表结构的衍生。二叉树是每个节点存在最多两个分支的树结构。（单链表则是每个节点只存在单一分支next）</p>
+
+<p><em>图片由visualgo制作</em></p>
+<p>最顶端的节点一般称为根节点，最底层的节点（没有左右分支）则称为叶子节点。二叉树的节点有左、右次序之分，通常分支被称作“左子树”或“右子树”。</p>
+<blockquote>
+<p>思考题：双链表算二叉树么？单链表呢？</p>
+</blockquote>
+<h3 id="二叉树节点的表示方法">二叉树节点的表示方法</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> val;</span><br><span class="line">    TreeNode left, right;</span><br><span class="line"></span><br><span class="line">    TreeNode(<span class="type">int</span> val) &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="基础知识——深度优先搜索">基础知识——深度优先搜索</h2>
+<p>本章我们重点介绍一种遍历树的算法：DFS深度优先搜索。它也是树类问题中最常见的面试考察模板。</p>
+<p>DFS的特点就是深度优先，在树上的每个位置都会优先往深处走（先左后右），直到叶子节点，再逐层返回。</p>
+
+<p>DFS通常可以使用递归写法：</p>
+<ol>
+<li>给定某个节点（如果当前节点为null，则返回）</li>
+<li>在本节点上进行操作</li>
+<li>递归地访问左子树</li>
+<li>递归地访问右子树</li>
+</ol>
+<p>模板代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(TreeNode node)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (node == <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  </span><br><span class="line">  doSomething(node); <span class="comment">// do something 代表在节点上的操作</span></span><br><span class="line">  dfs(node.left); <span class="comment">// 递归地访问左子树</span></span><br><span class="line">  dfs(node.right); <span class="comment">// 递归地访问右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要注意do something的操作可能发生在递归访问左右子树之前或者之后。根据do something位置的不同，dfs算法可以衍生出前序遍历、中序遍历、后序遍历三种算法。</p>
+<h2 id="1-案例-二叉树的前序遍历">1.案例: 二叉树的前序遍历</h2>
+<blockquote>
+<p>给出一棵二叉树，返回其节点值的前序遍历。</p>
+<p>输入: <br>
+输出: [1, 2, 3]</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>前序遍历的名字暗示了访问顺序，算法会按照中左右的顺序：首先访问根节点（当前节点），然后遍历左子树，最后遍历右子树。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(TreeNode node)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (node == <span class="literal">null</span>) <span class="keyword">return</span>;</span><br><span class="line">  </span><br><span class="line">  doSomething(node); <span class="comment">// 访问根节点</span></span><br><span class="line">  dfs(node.left); <span class="comment">// 遍历左子树</span></span><br><span class="line">  dfs(node.right); <span class="comment">// 遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在遍历左、右子树时，仍然先访问根节点（当前节点），然后遍历左子树，最后遍历右子树。</p>
+
+<p><em>图片由algorithm-visualizer制作</em></p>
+<p>整体上看，前序遍历会先沿左分支走到树的底部，访问完左子树，再通过回溯，回到上一层，然后访问右子树。</p>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">preorderTraversal</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    dfs(root, list);</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, List&lt;Integer&gt; list)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">null</span>)   <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    list.add(node.val); <span class="comment">// 访问当前节点</span></span><br><span class="line">    dfs(node.left, list); <span class="comment">// 遍历左子树</span></span><br><span class="line">    dfs(node.right, list); <span class="comment">// 遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>前序遍历有一种等价的写法，使用了stack和循环。在这里作为补充，建议在纸上模拟CPU调用，可以帮助理解。</p>
+<p>首先存入当前节点值，然后先将右子树压入栈中，再将左子树压入栈中。对栈中元素遍历访问。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">preorderTraversal</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;TreeNode&gt;();</span><br><span class="line">    List&lt;Integer&gt; preorder = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;Integer&gt;();</span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">null</span>)   <span class="keyword">return</span> preorder;</span><br><span class="line">    </span><br><span class="line">    stack.push(root); <span class="comment">// 存入当前节点值</span></span><br><span class="line">    <span class="keyword">while</span> (!stack.empty()) &#123;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">node</span> <span class="operator">=</span> stack.pop();</span><br><span class="line">        preorder.add(node.val);</span><br><span class="line">        <span class="keyword">if</span> (node.right != <span class="literal">null</span>) stack.push(node.right); <span class="comment">// 将右子树压入栈中</span></span><br><span class="line">        <span class="keyword">if</span> (node.left != <span class="literal">null</span>)  stack.push(node.left); <span class="comment">// 将左子树压入栈中</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> preorder;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="2-案例-二叉树的中序遍历">2.案例: 二叉树的中序遍历</h2>
+<blockquote>
+<p>给出一棵二叉树,返回其中序遍历</p>
+<p>输入: <br>
+输出: [1, 3, 2]</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>中序遍历会按照左中右的顺序首先遍历左子树，然后访问根节点，最后遍历右子树</p>
+
+<p><em>图片由algorithm-visualizer制作</em></p>
+<p>整体上看，由于中序遍历符合左中右的顺序，所以相当于沿着树的横向方向，挨个访问节点</p>
+
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">inorderTraversal</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    dfs(root, list);</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, List&lt;Integer&gt; list)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">null</span>)   <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    dfs(node.left, list); <span class="comment">// 遍历左子树</span></span><br><span class="line">    list.add(node.val); <span class="comment">// 访问当前节点</span></span><br><span class="line">    dfs(node.right, list); <span class="comment">// 遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>中序遍历也有一种使用了stack和循环的等价写法。在这里作为补充，建议在纸上模拟CPU调用，可以帮助理解。</p>
+<p>首先访问左子树，将左子树存入栈中。每次检查栈顶元素，如果右子树为空，取出栈顶元素，如果取出的元素为新栈顶元素右子树，一直弹出至当前元素不为栈顶元素右子树(说明右子树根节点已经被访问过)。如果节点右子树不为空，访问右子树，继续循环遍历左子树，存入栈中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">inorderTraversal</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    Stack&lt;TreeNode&gt; stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;();</span><br><span class="line">    ArrayList&lt;Integer&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty() || root != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">while</span> (root != <span class="literal">null</span>) &#123;</span><br><span class="line">            stack.push(root);</span><br><span class="line">            root = root.left;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        root = stack.pop();</span><br><span class="line">        result.add(root.val);</span><br><span class="line">        root = root.right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="3-案例-二叉树的后序遍历">3.案例: 二叉树的后序遍历</h2>
+<blockquote>
+<p>给出一棵二叉树，返回其节点值的后序遍历。</p>
+<p>输入: <br>
+输出: [3, 2, 1]</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>后序遍历会按照左右中的顺序：首先遍历左子树，然后遍历右子树，最后访问根节点。</p>
+
+<p><em>图片由algorithm-visualizer制作</em></p>
+<p>后序遍历在遍历左、右子树时，仍然先遍历左子树，然后遍历右子树，最后遍历根节点。后序遍历同样也有一种使用了stack和循环的等价写法。但是相比于前序和中序遍历，后序遍历的迭代写法难度较大，代码量长，所以从未作为面试考点出现过，只需要掌握递归式写法。</p>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">postorderTraversal</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    dfs(root, list);</span><br><span class="line">    <span class="keyword">return</span> list;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(TreeNode node, List&lt;Integer&gt; list)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">null</span>)   <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    dfs(node.left, list); <span class="comment">// 遍历左子树</span></span><br><span class="line">    dfs(node.right, list); <span class="comment">// 访问当前节点</span></span><br><span class="line">    list.add(node.val); <span class="comment">// 遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="4-案例-二叉树迭代器">4.案例: 二叉树迭代器</h2>
+<blockquote>
+<p>设计实现一个二叉树的迭代器：</p>
+<ul>
+<li>元素按照中序遍历的顺序被访问</li>
+<li>next()返回树中下一个元素</li>
+</ul>
+</blockquote>
+<h3 id="思路分析-4">思路分析</h3>
+<p>这道题其实就是要求改写中序遍历的stack写法。我们在之后会专门有一个章节来介绍Stack，现在我们只需要知道Stack是一种后进先出的数据结构，包含有push（压栈）和pop（弹出）两个主要API。</p>
+<ul>
+<li>构造时首先访问左子树，将左子树存入栈中。</li>
+<li>next函数每次获取栈顶元素。如果节点右子树不为空，访问右子树，继续循环遍历左子树，存入栈中。</li>
+<li>hasNext可以通过检查栈是否为空来获得。</li>
+</ul>
+
+<h3 id="代码实现-4">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BSTIterator</span> &#123;</span><br><span class="line">    Stack&lt;TreeNode&gt; stack;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">BSTIterator</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        stack = <span class="keyword">new</span> <span class="title class_">Stack</span>&lt;&gt;(); </span><br><span class="line">        <span class="keyword">while</span> (root != <span class="literal">null</span>) &#123; <span class="comment">// 将左子树存入栈中</span></span><br><span class="line">            stack.push(root);</span><br><span class="line">            root = root.left;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">TreeNode</span> <span class="variable">curt</span> <span class="operator">=</span> <span class="built_in">this</span>.stack.pop(); <span class="comment">// 获取栈顶元素</span></span><br><span class="line">        <span class="keyword">if</span> (curt.right != <span class="literal">null</span>) &#123; <span class="comment">// 如果栈顶元素存在右分支</span></span><br><span class="line">            <span class="type">TreeNode</span> <span class="variable">root</span> <span class="operator">=</span> curt.right; </span><br><span class="line">            <span class="keyword">while</span> (root != <span class="literal">null</span>) &#123; <span class="comment">// 将右分支的左子树存入栈中</span></span><br><span class="line">                stack.push(root);</span><br><span class="line">                root = root.left;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> curt.val; <span class="comment">// 返回栈顶元素</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> stack.size() &gt; <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>本题的本质是改写中序遍历的stack写法，所以平均时间复杂度为O(1)</p>
+<h2 id="总结">总结</h2>
+<p>前序、中序和后序遍历分别对应一种使用了stack和循环的写法。但是从2018年以来，stack写法作为考点出现的频率越来越低。取而代之的，是在2018年出现了以Morris遍历法作为考点。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Binary-Tree/" rel="tag"># Binary Tree</a>
+              <a href="/myblog/tags/Traversal/" rel="tag"># Traversal</a>
+              <a href="/myblog/tags/DFS/" rel="tag"># DFS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%207%20-%20Tree%20%E6%A0%91/" rel="prev" title="Day 7 - Tree 树">
+                  <i class="fa fa-chevron-left"></i> Day 7 - Tree 树
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%209%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%912/" rel="next" title="Day 9 - BST 二叉树2">
+                  Day 9 - BST 二叉树2 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%208%20-%20BST%20%E4%BA%8C%E5%8F%89%E6%A0%911/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

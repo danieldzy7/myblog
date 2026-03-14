@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 23 Array 数组 &amp; String 字符串 3 章节导读 数组类问题中，搜索是最常见的问题之一。面试官通常会给出一个数组、链表或者矩阵，然后要求面试者高效地查询特定元素。这一类问题中，最经典的解法就是二分法。二分法思路简单，但是非常高效，并且能有效考察面试人员的编码水平。 核心算法——二分搜索算法 二分搜索法是一种经典的算法，能在有序数组中以O(logn)的效率搜索特定的元素">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 23 Array 数组 &amp; String 字符串 3">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 23 Array 数组 &amp; String 字符串 3 章节导读 数组类问题中，搜索是最常见的问题之一。面试官通常会给出一个数组、链表或者矩阵，然后要求面试者高效地查询特定元素。这一类问题中，最经典的解法就是二分法。二分法思路简单，但是非常高效，并且能有效考察面试人员的编码水平。 核心算法——二分搜索算法 二分搜索法是一种经典的算法，能在有序数组中以O(logn)的效率搜索特定的元素">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-24T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.656Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Array">
+<meta property="article:tag" content="Binary Search">
+<meta property="article:tag" content="Search">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/","path":"Day 23 Array 数组 & String 字符串 3/","title":"Day 23 Array 数组 & String 字符串 3"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 23 Array 数组 & String 字符串 3 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 23 Array 数组 &amp; String 字符串 3</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E8%8A%82%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.1.</span> <span class="nav-text">章节导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">核心算法——二分搜索算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">1.案例: 二分搜索法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%901"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B01"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%902"><span class="nav-number">1.3.3.</span> <span class="nav-text">思路分析2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B02"><span class="nav-number">1.3.4.</span> <span class="nav-text">代码实现2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.5.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E6%95%B0%E5%AD%97%E8%8C%83%E5%9B%B4"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 数字范围</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%97%A0%E9%99%90%E9%95%BF%E5%BA%A6%E5%8D%87%E5%BA%8F%E6%95%B0%E7%BB%84"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 二分查找无限长度升序数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84"><span class="nav-number">1.6.</span> <span class="nav-text">4.案例: 搜索旋转排序数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.6.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.8.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 23 Array 数组 & String 字符串 3 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 23 Array 数组 & String 字符串 3
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-24 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-24T00:00:00-07:00">2025-05-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 23 Array 数组 &amp; String 字符串 3</h1>
+<h2 id="章节导读">章节导读</h2>
+<p>数组类问题中，搜索是最常见的问题之一。面试官通常会给出一个数组、链表或者矩阵，然后要求面试者高效地查询特定元素。这一类问题中，最经典的解法就是二分法。二分法思路简单，但是非常高效，并且能有效考察面试人员的编码水平。</p>
+<h2 id="核心算法——二分搜索算法">核心算法——二分搜索算法</h2>
+<p>二分搜索法是一种经典的算法，能在有序数组中以O(logn)的效率搜索特定的元素。</p>
+<p>搜索过程从数组的中间元素开始，如果中间元素正好是要查找的元素，则搜索过程结束；如果给定元素大于或者小于中间元素，则在数组大于或小于中间元素的那一半中查找。这种搜索算法每一次比较都使搜索范围缩小一半。</p>
+
+<p><em>图片由algorithm-visualizer制作</em></p>
+<p>二分搜索算法：</p>
+<ol>
+<li>初始化left和right，分别指向首位和末位</li>
+<li>找到中间位置mid</li>
+<li>如果mid不是我们要找到target<br>
+3.1. 如果target比mid指向的值小，说明target的位置在mid左侧，更新right的值<br>
+3.2. 如果target比mid指向的值大，说明target的位置在mid右侧，更新left的值</li>
+<li>如果mid指向我们要找到target，返回mid的值</li>
+<li>重复2-4步，直到退出循环</li>
+</ol>
+<p>实际上，二分搜索不只对有序数组有效，任何有序的可比较的集合都可以纳入二分法的适用范围，比如习题2的适用二分法开平方。</p>
+<h2 id="1-案例-二分搜索法">1.案例: 二分搜索法</h2>
+<blockquote>
+<p>给定一个已排序的数组，找到target对应的下标。如果target不存在，返回-1</p>
+<p>输入: nums = [0, 1, 21, 33, 45, 45, 61, 71, 72, 73], target = 33<br>
+输出: 3</p>
+</blockquote>
+<h3 id="思路分析1">思路分析1</h3>
+<p>二分法的思路虽然简单，但是90%的人并不能将它写对，很多人甚至会在边界条件上花上好几个小时。根据高德纳在《计算机程序设计的艺术》中所说：1946年就有公开发布的二分法算法，但是直到1962年才有人写出没有bug的二分法程序。</p>
+<p>这里我们先一段曾经java内置的binarySearch算法为例，分析二分法的实现难点。为了简化流程，我对它做了一些修改。</p>
+<h3 id="代码实现1">代码实现1</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="comment">// 指定搜索范围</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="comment">// 找到中间位置</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] == target) &#123; <span class="comment">// 找到目标元素</span></span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &lt; target) &#123; <span class="comment">// 目标元素在mid右侧</span></span><br><span class="line">            left = mid + <span class="number">1</span>; <span class="comment">// 抛弃mid左侧的搜索范围</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 目标元素在mid左侧</span></span><br><span class="line">            right = mid - <span class="number">1</span>; <span class="comment">// 抛弃mid右侧的搜索范围</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 未找到目标元素</span></span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码来自乔恩·本特利的《编程珠玑》，其中第6行存在整数溢出的问题，并且超过20年无人察觉。本特利也是java语言库的贡献者，这段有bug的代码在java中存在9年才被修复。</p>
+<p>第6行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> (left + right) / <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>如果left和right都是很大整数，二者相加超过了整数范围的上限，那么就会导致整型溢出错误。<br>
+本特利2006年在自己的博客中表示这里应该改成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left) / <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<p>但是同时他表示，自己依然不能确定这段代码已经没有bug了。（其实2008年，他还真的又找到了一个bug）</p>
+<h3 id="思路分析2">思路分析2</h3>
+<p>将二分法的算法变成代码实现，这个过程中存在太多模糊的地方：</p>
+<ul>
+<li>如何设置终止条件？应该是 left &lt; right 还是 left &lt;= right ？</li>
+<li>如何确定边界left和right？</li>
+<li>如何更新边界？left = mid 还是 left = mid + 1, right = mid 还是 right = mid - 1 ?</li>
+<li>…</li>
+</ul>
+<p>基于以上事实，二分法可以说是最难实现的算法之一。因此要向大家额外介绍一种二分法的模板，这段模板可以避免off-by-one error。</p>
+<h3 id="代码实现2">代码实现2</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="comment">// 指定搜索范围</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 放宽结束条件</span></span><br><span class="line">    <span class="keyword">while</span> (left + <span class="number">1</span> &lt; right) &#123;</span><br><span class="line">        <span class="comment">// 避免整型溢出</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (nums[mid] == target) &#123; <span class="comment">// 找到目标元素</span></span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &lt; target) &#123; <span class="comment">// 目标元素在mid右侧</span></span><br><span class="line">            <span class="comment">// 放宽边界收缩</span></span><br><span class="line">            left = mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 目标元素在mid左侧</span></span><br><span class="line">            <span class="comment">// 放宽边界收缩</span></span><br><span class="line">            right = mid;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 通过额外的两次比较判断边界</span></span><br><span class="line">    <span class="keyword">if</span> (nums[left] == target)   <span class="keyword">return</span> left;</span><br><span class="line">    <span class="keyword">if</span> (nums[right] == target)   <span class="keyword">return</span> right;</span><br><span class="line">    <span class="comment">// 未找到目标元素</span></span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段模板通过放宽边界来避免off-by-one error。每次边界的更新相对宽松，仅仅将mid的值赋值给left和right。所以当终止条件 left + 1 &lt; right 达成时，还有两个元素未被访问。此时再通过额外两次比较从left和right中找到目标元素。</p>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(logn)，空间复杂度O(1)。二分法存在多种模板，但是没有人可以保证某种模板适用于所有题型，读者在面试时需要根据题目自行调整算法。</p>
+<h2 id="2-案例-数字范围">2.案例: 数字范围</h2>
+<blockquote>
+<p>给定一个升序数组nums和一个值target。找出target在nums中的开始位置和结束位置。如果不存在，返回[-1, -1]。</p>
+<p>输入: [4, 6, 6, 6, 9], 6<br>
+输出: [1, 3]</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>本题是在二分搜索法上的延伸，我们只需要扩展二分法的第四步算法，让它适应搜索开始位置和结束位置两种模式。</p>
+<ol>
+<li>初始化left和right，分别指向首位和末位</li>
+<li>找到中间位置mid</li>
+<li>如果mid不是我们要找到target<br>
+3.1. 如果target比mid指向的值小，说明target的位置在mid左侧，更新right的值<br>
+3.2. 如果target比mid指向的值大，说明target的位置在mid右侧，更新left的值</li>
+<li>如果mid指向我们要找到target<br>
+4.1. 要找到第一个出现的target，我们更新right的值，来寻找左侧（mid之前）出现的target<br>
+4.2. 要找到最后一个出现的target，我们更新left的值，来寻找右侧（mid之后）出现的target</li>
+<li>重复2-4步，直到退出循环</li>
+</ol>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span>[] searchRange(<span class="type">int</span>[] nums, <span class="type">int</span> target) &#123;</span><br><span class="line">    <span class="type">int</span>[] ans = <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;-<span class="number">1</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">if</span> (nums == <span class="literal">null</span> || nums.length == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    <span class="comment">// 分别找到target在nums中的开始位置和结束位置</span></span><br><span class="line">    ans[<span class="number">0</span>] = find(nums, target, <span class="literal">true</span>);</span><br><span class="line">    ans[<span class="number">1</span>] = find(nums, target, <span class="literal">false</span>);</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target, <span class="type">boolean</span> first)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化left和right，分别指向首位和末位</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">idx</span> <span class="operator">=</span> -<span class="number">1</span>, left = <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="comment">// 找到中间位置mid</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (target &lt; nums[mid]) &#123; <span class="comment">// 如果target比mid指向的值小</span></span><br><span class="line">            <span class="comment">// 更新right的值</span></span><br><span class="line">            right = mid - <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (nums[mid] &lt; target) &#123; <span class="comment">// 如果target比mid指向的值大</span></span><br><span class="line">            <span class="comment">// 更新left的值</span></span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// mid指向要找到target</span></span><br><span class="line">            <span class="comment">// 记录下当前的下标</span></span><br><span class="line">            idx = mid;</span><br><span class="line">            <span class="keyword">if</span> (first) &#123; <span class="comment">// 寻找第一个出现的target</span></span><br><span class="line">                <span class="comment">// 更新right的值，寻找mid之前出现的target</span></span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123; <span class="comment">// 寻找最后一个出现的target</span></span><br><span class="line">                <span class="comment">// 更新left的值，寻找mid之后出现的target</span></span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回idx记录的下标</span></span><br><span class="line">    <span class="keyword">return</span> idx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(logn)，空间复杂度O(1)</p>
+<h2 id="3-案例-二分查找无限长度升序数组">3.案例: 二分查找无限长度升序数组</h2>
+<blockquote>
+<p>给定一个无限长度的升序数组，找到数组中是否存在target的值。如果存在，返回target的下标；否则返回-1。（提供ArrayReader.get(index)接口来查询）</p>
+<p>输入: [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30…], target = 16<br>
+输出: 6</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>本题代表了二分搜索的一个变种：当题目没有给定搜索边界时，如何进行搜索。</p>
+<p>我们反向利用二分法的思路，通过每次翻倍边界向外扩张，直到找到一个有效的边界。</p>
+
+<p>一旦确定了上下边界，我们再向内收缩，使用二分法查找。</p>
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(ArrayReader reader, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化上下边界</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">start</span> <span class="operator">=</span> <span class="number">0</span>, end = <span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 持续翻倍边界向外扩张，直到将target包含边界内</span></span><br><span class="line">    <span class="keyword">while</span> (reader.get(end) &lt; target)</span><br><span class="line">        end *= <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在上下边界内，使用二分法查找。</span></span><br><span class="line">    <span class="keyword">while</span> (start &lt;= end) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> start + (end - start) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (reader.get(mid) == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reader.get(mid) &lt; target) &#123;</span><br><span class="line">            start = mid + <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            end = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(logn)，空间复杂度O(1)</p>
+<h2 id="4-案例-搜索旋转排序数组">4.案例: 搜索旋转排序数组</h2>
+<blockquote>
+<p>给定一个旋转排序数组nums和一个值target，找出target在nums中的索引，否则返回-1。</p>
+<p>输入: [4, 5, 7, 9, 10, -1, 2], 10<br>
+输出: 4</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>本题是二分搜索的另一个变种：在旋转数组上搜索。旋转数组在局部上依然保持了升序的性质，仅在部分地方造成了中断。对于这类题目，我们依然使用二分法的思路，但是要在升序中断的地方做出相应的修改。</p>
+
+<ol>
+<li>初始化left和right，分别指向首位和末位</li>
+<li>找到中间位置mid</li>
+<li>如果mid指向我们要找到target，返回mid</li>
+<li>如果mid不是我们要找到target，判断保持升序的部分<br>
+4.1. 如果nums[left] &lt;= nums[mid]，说明left到mid之间依然保持升序<br>
+4.2. 否则，说明mid到right之间保持升序</li>
+<li>判断target是否位于保持升序的区间内，更新对应的边界</li>
+<li>重复2-5步，直到退出循环</li>
+</ol>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">search</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化left和right，分别指向首位和末位</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">        <span class="comment">// 找到中间位置mid</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> (left + right) / <span class="number">2</span>;</span><br><span class="line">        <span class="comment">// 找到目标元素，返回mid</span></span><br><span class="line">        <span class="keyword">if</span> (nums[mid] == target) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (nums[left] &lt;= nums[mid]) &#123; <span class="comment">// 说明[left, mid]保持升序</span></span><br><span class="line">            <span class="comment">// target位于[left, mid]内</span></span><br><span class="line">            <span class="keyword">if</span> (nums[left] &lt;= target &amp;&amp; target &lt;= nums[mid]) &#123;</span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">// 说明[mid, right]保持升序</span></span><br><span class="line">            <span class="comment">// target位于[mid, right]内</span></span><br><span class="line">            <span class="keyword">if</span> (nums[mid] &lt;= target &amp;&amp; target &lt;= nums[right]) &#123;</span><br><span class="line">                left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                right = mid - <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>时间复杂度O(logn)，空间复杂度O(1)</p>
+<h2 id="总结">总结</h2>
+<p>本章我们学习了二分法和它的变种。二分法思路简单，但是在实现过程中会有很多暗藏的bug。想要一次性写出bug-free的版本，还需要读者多加练习。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>给定一串排序的letters小写字母数组，给定一个目标字母target，找出letters中大于目标字母的最小字母。</li>
+<li>实现int sqrt(int x)函数，计算并返回x的平方根。</li>
+<li>给定一个旋转排序且可能有重复值的数组nums和一个值target，找出target在nums中的索引，否则返回-1。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Array/" rel="tag"># Array</a>
+              <a href="/myblog/tags/Binary-Search/" rel="tag"># Binary Search</a>
+              <a href="/myblog/tags/Search/" rel="tag"># Search</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2022%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%202/" rel="prev" title="Day 22 Array 数组 & String 字符串 2">
+                  <i class="fa fa-chevron-left"></i> Day 22 Array 数组 & String 字符串 2
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2024%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%204/" rel="next" title="Day 24 String 字符串 4">
+                  Day 24 String 字符串 4 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2023%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%203/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

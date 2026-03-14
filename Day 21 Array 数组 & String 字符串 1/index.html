@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 21 Array 数组 &amp; String 字符串 1 章节导读 我们在之前的数组入门章节中，介绍了数组配合指针的基本技巧，其中最重要的技巧是两根指针。两根指针法有多个变种，本章我们来学习其中最重要的一种变化：滑动窗口。 核心算法——滑动窗口 在数组或者链表类问题中，我们常常需要在一段给定长度的连续子数组或者子链表上进行计算或者查询。朴素解法会使用两层for循环，实际上在子数组位置变">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 21 Array 数组 &amp; String 字符串 1">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 21 Array 数组 &amp; String 字符串 1 章节导读 我们在之前的数组入门章节中，介绍了数组配合指针的基本技巧，其中最重要的技巧是两根指针。两根指针法有多个变种，本章我们来学习其中最重要的一种变化：滑动窗口。 核心算法——滑动窗口 在数组或者链表类问题中，我们常常需要在一段给定长度的连续子数组或者子链表上进行计算或者查询。朴素解法会使用两层for循环，实际上在子数组位置变">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-22T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.655Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Array">
+<meta property="article:tag" content="String">
+<meta property="article:tag" content="Sliding Window">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/","path":"Day 21 Array 数组 & String 字符串 1/","title":"Day 21 Array 数组 & String 字符串 1"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 21 Array 数组 & String 字符串 1 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 21 Array 数组 &amp; String 字符串 1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E8%8A%82%E5%AF%BC%E8%AF%BB"><span class="nav-number">1.1.</span> <span class="nav-text">章节导读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">1.2.</span> <span class="nav-text">核心算法——滑动窗口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E5%92%8C%E5%A4%A7%E4%BA%8ES%E7%9A%84%E6%9C%80%E5%B0%8F%E5%AD%90%E6%95%B0%E7%BB%84"><span class="nav-number">1.3.</span> <span class="nav-text">1.案例: 和大于S的最小子数组</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E6%9C%80%E5%A4%9A%E6%9C%89k%E4%B8%AA%E4%B8%8D%E5%90%8C%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 最多有k个不同字符的最长子字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%8E%92%E5%88%97"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 字符串的排列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-%E6%9C%80%E5%B0%8F%E5%AD%90%E4%B8%B2%E8%A6%86%E7%9B%96"><span class="nav-number">1.6.</span> <span class="nav-text">4.案例: 最小子串覆盖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.8.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 21 Array 数组 & String 字符串 1 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 21 Array 数组 & String 字符串 1
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-22 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-22T00:00:00-07:00">2025-05-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 21 Array 数组 &amp; String 字符串 1</h1>
+<h2 id="章节导读">章节导读</h2>
+<p>我们在之前的数组入门章节中，介绍了数组配合指针的基本技巧，其中最重要的技巧是两根指针。两根指针法有多个变种，本章我们来学习其中最重要的一种变化：滑动窗口。</p>
+<h2 id="核心算法——滑动窗口">核心算法——滑动窗口</h2>
+<p>在数组或者链表类问题中，我们常常需要在一段给定长度的连续子数组或者子链表上进行计算或者查询。朴素解法会使用两层for循环，实际上在子数组位置变化时，变化前后的子数组有大量的共有元素，因此我们可以重复使用前一次的子数组，这种技巧就是滑动窗口。</p>
+
+<p>我们将每个连续的子数组看做一个固定长度的窗口，窗口沿着数组滑动。滑动窗口的空间消耗为O(n)。定长滑动窗口通常可以使用for循环配合指针解决。</p>
+<p>如果滑动窗口的长度经常发生变化，我们称之为动态滑动窗口。动态滑动窗口法有一套基础模板，但是这套模板比较繁琐，需要我们理清题目的要求，针对题意套用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (right = <span class="number">0</span>; right &lt; nums.length; right++) &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    <span class="keyword">while</span> (left &lt; nums.length) &#123;</span><br><span class="line">        <span class="keyword">if</span> (condition) &#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是简化后模板，能够应付大部分题目。一般情况下，可以先考虑简易模板，如果不能满足题目要求，在修改成完整的模板。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (right = <span class="number">0</span>; right &lt; nums.length; right++) &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">    <span class="keyword">while</span> (condition) &#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">        left++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-案例-和大于S的最小子数组">1.案例: 和大于S的最小子数组</h2>
+<blockquote>
+<p>给定一个由n个正整数组成的数组和一个正整数s，请找出该数组中满足其和大于等于s的最小长度子数组长度。如果无解，则返回0。</p>
+<p>输入: [2, 1, 5, 2, 3, 2], s = 7<br>
+输出: 2</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>本题我们可以套用动态滑动窗口的简易模板。要注意的是，本题中窗口的大小并不固定。</p>
+<ol>
+<li>初始化left, right两根指针，指向位置0</li>
+<li>先移动right指针，直到累积和超过s</li>
+<li>此时left和right之间的位置将构成滑动窗口，我们每次需要将窗口的长度和已知的最小长度作比较</li>
+<li>移动right指针，加入新的元素，窗口的和大于等于s时停止</li>
+<li>移动left指针，缩小窗口大小，直到窗口的和小于s</li>
+<li>重复步骤 4 &amp; 5 直到结尾</li>
+</ol>
+
+
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">minSubArrayLen</span><span class="params">(<span class="type">int</span> s, <span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">    <span class="comment">// 初始化left, right两根指针，指向位置0</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> Integer.MAX_VALUE, sum = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (right = <span class="number">0</span>; right &lt; nums.length; right++) &#123;</span><br><span class="line">        <span class="comment">// 移动right指针</span></span><br><span class="line">        sum += nums[right];</span><br><span class="line">        <span class="comment">// 累积和超过s</span></span><br><span class="line">        <span class="keyword">while</span> (sum &gt;= s) &#123;</span><br><span class="line">            <span class="comment">// 满足条件，更新ans</span></span><br><span class="line">            ans = Math.min(ans, right - left + <span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 移动left指针，缩小窗口大小</span></span><br><span class="line">            sum -= nums[left];</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回子数组长度；无解返回0</span></span><br><span class="line">    <span class="keyword">return</span> ans == Integer.MAX_VALUE ? <span class="number">0</span> : ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(1)。每个元素至多被访问两次，指针移动完需要O(n)的时间。两根指针只需要常数空间。</p>
+<h2 id="2-案例-最多有k个不同字符的最长子字符串">2.案例: 最多有k个不同字符的最长子字符串</h2>
+<blockquote>
+<p>给定字符串，找到最多有k个不同字符的最长子串。</p>
+<p>输入: String=“araaci”, K=2<br>
+输出: 4</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>本题是字符串类问题。字符串本质上是一个char元素组成的一维数组，我们可以将数组类问题的解法用在字符串上。本题我们依然可以套用动态滑动窗口的简易模板，但是我们需要一个额外的Map来记录窗口中每个字符出现的频数。</p>
+<ol>
+<li>初始化left, right两根指针，指向位置0</li>
+<li>移动right指针，将新的字符加入map，直到拥有超过k个不同字符</li>
+<li>移动left指针，缩小窗口大小，直到不同字符的个数小于k</li>
+<li>重复步骤 2 &amp; 3 直到结尾</li>
+</ol>
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lengthOfLongestSubstringKDistinct</span><span class="params">(String s, <span class="type">int</span> k)</span> &#123;</span><br><span class="line">    HashMap&lt;Character, Integer&gt; count = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 初始化left, right两根指针，指向位置0</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (right = <span class="number">0</span>; right &lt; s.length(); right++) &#123;</span><br><span class="line">        <span class="comment">// 移动right指针</span></span><br><span class="line">        <span class="type">char</span> <span class="variable">r</span> <span class="operator">=</span> s.charAt(right);</span><br><span class="line">        <span class="comment">// 加入新的元素</span></span><br><span class="line">        count.put(r, count.getOrDefault(r, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">while</span> (count.size() &gt; k) &#123;</span><br><span class="line">            <span class="comment">// 移动left指针，缩小窗口大小</span></span><br><span class="line">            <span class="type">char</span> <span class="variable">l</span> <span class="operator">=</span> s.charAt(left);</span><br><span class="line">            <span class="comment">// 移除旧的字符</span></span><br><span class="line">            count.put(l, count.get(l) - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (count.get(l) == <span class="number">0</span>)</span><br><span class="line">                count.remove(l);</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 满足条件，更新ans</span></span><br><span class="line">        ans = Math.max(ans, right - left + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(1)。移动滑动窗口需要O(n)的时间。HashMap最多只包含26个字母，只需要常数空间。</p>
+<h2 id="3-案例-字符串的排列">3.案例: 字符串的排列</h2>
+<blockquote>
+<p>给定一个String s和一个Pattern p，判断s是否包含p的某种排列</p>
+<p>输入: Pattern=“abc”，String=“oidbcaf”<br>
+输出: true (“bca” 是 “abc”的一种排列)</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>本题是定长滑动窗口类问题，所以只需for循环配合指针就可以解决，我们依然需要额外的map来记录出现过的字符。</p>
+<ol>
+<li>建立一个map来记录pattern中字符出现的频数，另一个map来记录窗口中字符出现的频数</li>
+<li>在字符串上滑动窗口，每次加入一位新的字符，移除一位旧的字符，更新对应字符出现的频数</li>
+<li>如果窗口对应的map与pattern对应的map一致，那么当前窗口包含p的某种排列</li>
+<li>滑动窗口直到到达结尾</li>
+</ol>
+<p>这里顺便介绍一种用int数组代替hashmap的方法：char字符本身可以解释为整数型。当字符集大小有限时，我们可以用一个256位或者26位(只有小写字符)的数组，用字符作下标，作为一个char -&gt; int的映射。</p>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">checkInclusion</span><span class="params">(String s1, String s2)</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">len1</span> <span class="operator">=</span> s1.length(), len2 = s2.length();</span><br><span class="line">    <span class="comment">// 如果pattern长度超过字符串，那么直接结束程序</span></span><br><span class="line">    <span class="keyword">if</span> (len1 &gt; len2)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">// map1 记录pattern中字符出现的频数</span></span><br><span class="line">    <span class="type">int</span>[] map1 = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">26</span>];</span><br><span class="line">    <span class="comment">// map2 记录窗口中字符出现的频数</span></span><br><span class="line">    <span class="type">int</span>[] map2 = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">26</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; len1; i++) &#123;</span><br><span class="line">        <span class="comment">// 对应更新字符出现的频数</span></span><br><span class="line">        map1[s1.charAt(i) - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">        map2[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在字符串上滑动窗口</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> len1; i &lt; len2; i++) &#123;</span><br><span class="line">        <span class="comment">// 窗口对应的map与pattern对应的map一致，那么当前窗口包含p的某种排列</span></span><br><span class="line">        <span class="keyword">if</span> (Arrays.equals(map1, map2))</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// 加入一位新的字符，更新对应字符出现的频数</span></span><br><span class="line">        map2[s2.charAt(i) - <span class="string">&#x27;a&#x27;</span>]++;</span><br><span class="line">        <span class="comment">// 移除一位旧的字符，更新对应字符出现的频数</span></span><br><span class="line">        map2[s2.charAt(i - len1) - <span class="string">&#x27;a&#x27;</span>]--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> Arrays.equals(map1, map2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(1)。移动滑动窗口需要O(n)的时间。map数组长度为26，只需要常数空间。</p>
+<h2 id="4-案例-最小子串覆盖">4.案例: 最小子串覆盖</h2>
+<blockquote>
+<p>给定两个字符串source和target. 求source中最短的包含target中每一个字符的子串.</p>
+<p>输入: s=“aabdec”, t=“abc”<br>
+输出: “abdec”</p>
+</blockquote>
+<h3 id="思路分析-4">思路分析</h3>
+<p>本题与题3有相似之处，都是给定string和pattern做模式匹配。但是题3是定长滑动窗口类问题，而本题是动态滑动窗口。</p>
+<ol>
+<li>建立一个map来记录target中字符出现的频数</li>
+<li>在字符串上滑动窗口，每次加入一位新的字符，将加入的新字符与已有的map匹配</li>
+<li>如果当前窗口与target匹配，开始收缩左边界，直到匹配条件被破坏</li>
+<li>滑动窗口直到到达结尾</li>
+</ol>
+<p>在之前的题目中，我们调用了Arrays.equals方法来比较两个数组。实际上这个方法会遍历整个数组，只不过我们的数组长度不大，所以对性能影响不显著。本题中，我们介绍一种优化方法，使用一个额外的int字段，记录匹配成功的字符数。当所有字符都匹配时，该字段的值应该与map大小相等。这样我们可以把遍历优化成单次比较操作，从而提高性能。</p>
+<h3 id="代码实现-4">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_">minWindow</span><span class="params">(String s, String t)</span> &#123;</span><br><span class="line">    <span class="comment">// 如果target长度超过source，那么直接结束程序</span></span><br><span class="line">    <span class="keyword">if</span> (t.length() &gt; s.length())&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 建立一个map来记录target中字符出现的频数</span></span><br><span class="line">    HashMap&lt;Character, Integer&gt; count = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">char</span> c : t.toCharArray()) &#123;</span><br><span class="line">        count.put(c, count.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>, right = <span class="number">0</span>, match = <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> Integer.MAX_VALUE, start = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 在字符串上滑动窗口</span></span><br><span class="line">    <span class="keyword">for</span> (right = <span class="number">0</span>; right &lt; s.length(); right++) &#123;</span><br><span class="line">        <span class="comment">// 每次加入一位新的字符</span></span><br><span class="line">        <span class="type">char</span> <span class="variable">r</span> <span class="operator">=</span> s.charAt(right);</span><br><span class="line">        <span class="keyword">if</span> (count.containsKey(r)) &#123;</span><br><span class="line">            count.put(r, count.get(r) - <span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 将加入的新字符与已有的map匹配</span></span><br><span class="line">            <span class="keyword">if</span> (count.get(r) == <span class="number">0</span>)</span><br><span class="line">                match++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 当所有字符都匹配时，该字段的值应该与map大小相等</span></span><br><span class="line">        <span class="keyword">while</span> (match == count.size()) &#123;</span><br><span class="line">            <span class="comment">// 记录当前的最小长度和起始索引</span></span><br><span class="line">            <span class="keyword">if</span> (len &gt; right - left + <span class="number">1</span>) &#123;</span><br><span class="line">                len = right - left + <span class="number">1</span>;</span><br><span class="line">                start = left;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 收缩左边界</span></span><br><span class="line">            <span class="type">char</span> <span class="variable">l</span> <span class="operator">=</span> s.charAt(left);</span><br><span class="line">            <span class="keyword">if</span> (count.containsKey(l)) &#123;</span><br><span class="line">                <span class="comment">// 更新匹配的字符数</span></span><br><span class="line">                <span class="keyword">if</span> (count.get(l) == <span class="number">0</span>)</span><br><span class="line">                    match--;</span><br><span class="line">                count.put(l, count.get(l) + <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 收缩左边界</span></span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 利用start和len，找到最小覆盖子串</span></span><br><span class="line">    <span class="keyword">return</span> len == Integer.MAX_VALUE ? <span class="string">&quot;&quot;</span> : s.substring(start, start + len);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(1)。移动滑动窗口需要O(n)的时间。HashMap最多只包含26个字母，只需要常数空间。</p>
+<h2 id="总结">总结</h2>
+<p>本章我们学习了两根指针法的变种技巧：滑动窗口。滑动窗口分为定长滑动窗口和动态滑动窗口两类。并且经常作为数组、字符串、列表的常考题出现在面试中。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>最长无重复字符的子串：给定一个字符串，找出其中无重复字符的最长子字符串。</li>
+<li>替换后的最长重复字符：给定一个字符串，可以将字符串中的任何一个字母替换为的另一个字母，最多替换k次。执行上述操作后，找到最长的，只含有同一字母的子字符串的长度。</li>
+<li>最多连续1：给定一个0/1数组，可以将0替换为1，最多替换k次。找到最长的，只含有1的子数组长度。</li>
+<li>寻找所有的pattern排序：给定一个字符串s和一个Pattern p，找到在s中所有p的某种排列组成的子串的起始索引。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Array/" rel="tag"># Array</a>
+              <a href="/myblog/tags/String/" rel="tag"># String</a>
+              <a href="/myblog/tags/Sliding-Window/" rel="tag"># Sliding Window</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/" rel="prev" title="Day 20 - Graph 图 4">
+                  <i class="fa fa-chevron-left"></i> Day 20 - Graph 图 4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2022%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%202/" rel="next" title="Day 22 Array 数组 & String 字符串 2">
+                  Day 22 Array 数组 & String 字符串 2 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/myblog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"danieldzy7.github.io","root":"/myblog/","images":"/myblog/images","scheme":"Gemini","darkmode":false,"version":"8.13.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"style":null,"show_result":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":true,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/myblog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":false}}</script><script src="/myblog/js/config.js"></script>
+
+    <meta name="description" content="Day 20 - Graph 图 4 上一章我们学习了图类题中的经典考察模板：拓扑排序。拓扑排序与BFS层级遍历算法非常相似，但是思路并不相同。希望读者能够掌握并区分这两种算法。本章我们来看另一种经典考察模板：并查集 核心算法——并查集 并查集本身是一种树型的数据结构（也叫disjoint-set），专门处理连通性（合并与查询）问题。Union-Find并查描述的是该数据结构的算法操作：  Fin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Day 20 - Graph 图 4">
+<meta property="og:url" content="http://danieldzy7.github.io/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/index.html">
+<meta property="og:site_name" content="Tech">
+<meta property="og:description" content="Day 20 - Graph 图 4 上一章我们学习了图类题中的经典考察模板：拓扑排序。拓扑排序与BFS层级遍历算法非常相似，但是思路并不相同。希望读者能够掌握并区分这两种算法。本章我们来看另一种经典考察模板：并查集 核心算法——并查集 并查集本身是一种树型的数据结构（也叫disjoint-set），专门处理连通性（合并与查询）问题。Union-Find并查描述的是该数据结构的算法操作：  Fin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-21T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-07T09:57:07.660Z">
+<meta property="article:author" content="Daniel">
+<meta property="article:tag" content="Graph">
+<meta property="article:tag" content="Union Find">
+<meta property="article:tag" content="Disjoint Set">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://danieldzy7.github.io/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://danieldzy7.github.io/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/","path":"Day 20 - Graph 图 4/","title":"Day 20 - Graph 图 4"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Day 20 - Graph 图 4 | Tech</title>
+  
+
+
+
+
+
+<link rel="dns-prefetch" href="waline-sooty.vercel.app"><script src="https://fastly.jsdelivr.net/gh/stevenjoezhang/live2d-widget@latest/autoload.js"></script>
+<!-- Updated: 2025-01-27 - Force GitHub Pages rebuild -->
+
+  <noscript>
+    <link rel="stylesheet" href="/myblog/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/myblog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Tech</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">世间所有的相遇 都是久别重逢</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/myblog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">63</span></a></li><li class="menu-item menu-item-categories"><a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a></li><li class="menu-item menu-item-archives"><a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">Day 20 - Graph 图 4</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E5%B9%B6%E6%9F%A5%E9%9B%86"><span class="nav-number">1.1.</span> <span class="nav-text">核心算法——并查集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E6%9F%A5%E9%9B%86%E6%A3%AE%E6%9E%97"><span class="nav-number">1.1.1.</span> <span class="nav-text">并查集森林</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Union"><span class="nav-number">1.1.2.</span> <span class="nav-text">Union</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Find"><span class="nav-number">1.1.3.</span> <span class="nav-text">Find</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IsSame"><span class="nav-number">1.1.4.</span> <span class="nav-text">IsSame</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E5%B9%B6%E6%9F%A5%E9%9B%86%E7%9A%84%E6%9C%80%E4%BC%98%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.2.</span> <span class="nav-text">核心算法——并查集的最优实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%A1%88%E4%BE%8B-%E5%86%97%E4%BD%99%E7%9A%84%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.3.</span> <span class="nav-text">1.案例: 冗余的连接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90"><span class="nav-number">1.3.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A1%88%E4%BE%8B-%E5%B2%9B%E5%B1%BF%E7%9A%84%E4%B8%AA%E6%95%B02"><span class="nav-number">1.4.</span> <span class="nav-text">2.案例: 岛屿的个数2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="nav-number">1.4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-2"><span class="nav-number">1.4.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%A1%88%E4%BE%8B-%E8%B4%A6%E6%88%B7%E5%90%88%E5%B9%B6"><span class="nav-number">1.5.</span> <span class="nav-text">3.案例: 账户合并</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-3"><span class="nav-number">1.5.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-3"><span class="nav-number">1.5.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E6%A1%88%E4%BE%8B-%E8%AE%A1%E7%AE%97%E9%99%A4%E6%B3%95"><span class="nav-number">1.6.</span> <span class="nav-text">4.案例: 计算除法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.1.</span> <span class="nav-text">思路分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-4"><span class="nav-number">1.6.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90-4"><span class="nav-number">1.6.3.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%A0%E9%A2%98"><span class="nav-number">1.8.</span> <span class="nav-text">习题</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Daniel"
+      src="/myblog/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Daniel</p>
+  <div class="site-description" itemprop="description">慢下来，纪录生活点滴，分享技术发现</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/myblog/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/myblog/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/myblog/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/danieldzy7" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;danieldzy7" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://danieldzy7.github.io/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/myblog/images/avatar.jpg">
+      <meta itemprop="name" content="Daniel">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech">
+      <meta itemprop="description" content="慢下来，纪录生活点滴，分享技术发现">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Day 20 - Graph 图 4 | Tech">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Day 20 - Graph 图 4
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2025-05-21 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-21T00:00:00-07:00">2025-05-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-10-07 02:57:07" itemprop="dateModified" datetime="2025-10-07T02:57:07-07:00">2025-10-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/myblog/categories/Data-Structure/" itemprop="url" rel="index"><span itemprop="name">Data Structure</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+  
+  <span class="post-meta-item">
+    
+    <span class="post-meta-item-icon">
+      <i class="far fa-comment"></i>
+    </span>
+    <span class="post-meta-item-text">Waline：</span>
+  
+    <a title="waline" href="/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/#waline" itemprop="discussionUrl">
+      <span class="post-comments-count waline-comment-count" data-path="/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1>Day 20 - Graph 图 4</h1>
+<p>上一章我们学习了图类题中的经典考察模板：拓扑排序。拓扑排序与BFS层级遍历算法非常相似，但是思路并不相同。希望读者能够掌握并区分这两种算法。本章我们来看另一种经典考察模板：并查集</p>
+<h2 id="核心算法——并查集">核心算法——并查集</h2>
+<p>并查集本身是一种树型的数据结构（也叫disjoint-set），专门处理连通性（合并与查询）问题。Union-Find并查描述的是该数据结构的算法操作：</p>
+<ul>
+<li>Find：确定元素属于哪一个子集</li>
+<li>Union：将两个子集合并成一个集合</li>
+</ul>
+<h3 id="并查集森林">并查集森林</h3>
+<p>并查集森林是一种将每一个集合以树表示的数据结构，其中每一个节点保存着到它的父节点的引用。在并查集森林中，每个集合的代表即是集合的根节点。Find根据其父节点的引用向根行进，直到到达树根。Union通过将一棵树的根连接到另一棵树的根，将两棵树合并到一起。</p>
+<h3 id="Union">Union</h3>
+<p>Union可以将两个子集合并成一个集合。初始时有4个节点，互不相连。我们先合并1和2，再合并2和3。我们可以发现1和3也被我们间接相连了。</p>
+
+<p><em>图片由visualgo制作</em></p>
+<h3 id="Find">Find</h3>
+<p>Find函数用于确定元素属于哪一个子集。比如我们查询集合3，并查集会返回根节点1，说明集合3属于集合1代表的集合。</p>
+
+<p><em>图片由visualgo制作</em></p>
+<h3 id="IsSame">IsSame</h3>
+<p>IsSame并不是标准API的一部分，需要自己实现。实现时IsSame函数会调用Find函数，查询两个集合是否属于同一个更大的集合。<br>
+比如我们查询IsSame(2, 3)，并查集会先查询得知集合2属于集合1代表的集合，集合3也属于集合1代表的集合。返回true，说明集合2 &amp; 3属于同一集合。</p>
+
+<p><em>图片由visualgo制作</em></p>
+<p>如果我们查询IsSame(0, 3)，并查集会先查询得知集合0属于集合0代表的集合，集合3属于集合1代表的集合。返回false，说明集合0 &amp; 3属于不同集合。</p>
+
+<p><em>图片由visualgo制作</em></p>
+<h2 id="核心算法——并查集的最优实现">核心算法——并查集的最优实现</h2>
+<p>并查集有多种实现方式，我们在这里只介绍并查集的最优实现。这种实现方法能够在不明显增加空间复杂度的情况下，提供最高效的合并、查找功能，并且能适应所有面试题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UF</span> &#123;</span><br><span class="line">    <span class="type">int</span> count;  <span class="comment">// 记录当前包含集合的个数</span></span><br><span class="line">    <span class="type">int</span>[] size; <span class="comment">// 记录每个集合的大小</span></span><br><span class="line">    <span class="type">int</span>[] id; <span class="comment">// 每一个节点保存着到它的父节点的引用</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UF</span> <span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="comment">// 初始时，每个节点是只包含它本身的集合</span></span><br><span class="line">        count = n; <span class="comment">// n个节点对应n个集合</span></span><br><span class="line">        <span class="comment">// 创建与节点个数相同大小的两个数组</span></span><br><span class="line">        size = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        id = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="comment">// 因为每个初始集合是只包含节点本身</span></span><br><span class="line">            size[i] = <span class="number">1</span>; <span class="comment">// 集合大小为1</span></span><br><span class="line">            id[i] = i; <span class="comment">// 集合id为节点本身的id</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据当前节点父节点的引用向根行进，直到到达树根</span></span><br><span class="line">        <span class="keyword">while</span> (n != id[n]) &#123;</span><br><span class="line">            id[n] = id[id[n]]; <span class="comment">// 路径压缩，改变每一个节点的引用</span></span><br><span class="line">            n = id[n];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line">        <span class="comment">// 分别找到a, b的父节点</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">pa</span> <span class="operator">=</span> find(a);</span><br><span class="line">        <span class="type">int</span> <span class="variable">pb</span> <span class="operator">=</span> find(b);</span><br><span class="line">        <span class="comment">// a &amp; b已经属于统一集合</span></span><br><span class="line">        <span class="keyword">if</span> (pa == pb) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将小的集合合并入大的集合</span></span><br><span class="line">        <span class="keyword">if</span> (size[pa] &lt; size[pb]) &#123;</span><br><span class="line">            id[pa] = pb;</span><br><span class="line">            size[pb] += size[pa];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            id[pb] = pa;</span><br><span class="line">            size[pa] += size[pb];</span><br><span class="line">        &#125;</span><br><span class="line">        count--; <span class="comment">// 合并后，集合个数减1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 合并成功</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每次操作的时间复杂度可近似看做O(1)，空间复杂度O(n)。</p>
+<h2 id="1-案例-冗余的连接">1.案例: 冗余的连接</h2>
+<blockquote>
+<p>树是一个无环无向联通图。给定一个具有N个节点的树，树上添加了一条额外的边。找到应该被删除的边，将图还原成一棵树。</p>
+<p>输入: [[1,2], [1,3], [2,3]]<br>
+输出: [2,3]</p>
+</blockquote>
+<h3 id="思路分析">思路分析</h3>
+<p>此题的思路比较简单，是并查集的简单应用。样例输入为[[1,2], [1,3], [2,3]]时，给出的图是个环。我们不断地把边加入并查集中，一旦发现有条边的两个端点已经在同一个集合内，说明这两个点之前已经连接过，因此当前这条边就是多余的边。</p>
+<h3 id="代码实现">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span>[] findRedundantConnection(<span class="type">int</span>[][] edges) &#123;</span><br><span class="line">        <span class="comment">// 建立一个大小为N的并查集</span></span><br><span class="line">        <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(edges.length + <span class="number">1</span>);</span><br><span class="line">        <span class="comment">// 不断地把边加入并查集</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span>[] e: edges) &#123;</span><br><span class="line">            <span class="comment">// 如果两个端点已经在同一个集合内，这条边就是多余的边</span></span><br><span class="line">            <span class="keyword">if</span> (!uf.union(e[<span class="number">0</span>], e[<span class="number">1</span>])) &#123;</span><br><span class="line">                <span class="keyword">return</span> e;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将并查集作为inner class，放在原有的class内部</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">UF</span> &#123;</span><br><span class="line">        <span class="type">int</span> count;  <span class="comment">// 记录当前包含集合的个数</span></span><br><span class="line">        <span class="type">int</span>[] size; <span class="comment">// 记录每个集合的大小</span></span><br><span class="line">        <span class="type">int</span>[] id; <span class="comment">// 每一个节点保存着到它的父节点的引用</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">UF</span> <span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">            <span class="comment">// 初始时，每个节点是只包含它本身的集合</span></span><br><span class="line">            count = n; <span class="comment">// n个节点对应n个集合</span></span><br><span class="line">            <span class="comment">// 创建与节点个数相同大小的两个数组</span></span><br><span class="line">            size = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">            id = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span> ; i &lt; n; i++) &#123;</span><br><span class="line">                <span class="comment">// 因为每个初始集合是只包含节点本身</span></span><br><span class="line">                size[i] = <span class="number">1</span>; <span class="comment">// 集合大小为1</span></span><br><span class="line">                id[i] = i; <span class="comment">// 集合id为节点本身的id</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">find</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">            <span class="comment">// 根据当前节点父节点的引用向根行进，直到到达树根</span></span><br><span class="line">            <span class="keyword">while</span> (n != id[n]) &#123;</span><br><span class="line">                id[n] = id[id[n]]; <span class="comment">// 路径压缩，改变每一个节点的引用</span></span><br><span class="line">                n = id[n];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> n;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">union</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> &#123;</span><br><span class="line">            <span class="comment">// 分别找到a, b的父节点</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">pa</span> <span class="operator">=</span> find(a);</span><br><span class="line">            <span class="type">int</span> <span class="variable">pb</span> <span class="operator">=</span> find(b);</span><br><span class="line">            <span class="comment">// a &amp; b已经属于统一集合</span></span><br><span class="line">            <span class="keyword">if</span> (pa == pb) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将小的集合合并入大的集合</span></span><br><span class="line">            <span class="keyword">if</span> (size[pa] &lt; size[pb]) &#123;</span><br><span class="line">                id[pa] = pb;</span><br><span class="line">                size[pb] += size[pa];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                id[pb] = pa;</span><br><span class="line">                size[pa] += size[pb];</span><br><span class="line">            &#125;</span><br><span class="line">            count--; <span class="comment">// 合并后，集合个数减1</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// 合并成功</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)。在之后的题解中，我们将略过UF并查集的class定义，直接调用。</p>
+<h2 id="2-案例-岛屿的个数2">2.案例: 岛屿的个数2</h2>
+<blockquote>
+<p>给定一个n x m的二维矩阵和一个大小为k的二元数组A，初始二维矩阵全0。二元数组A内的k个元素代表k次操作，表示把二维矩阵中下标为(A[0], A[1])的元素由海洋变为岛屿。返回每次变化之后，二维矩阵中岛屿的数量。</p>
+<p>输入: n = 4, m = 5, A = [[1,1],[0,1],[3,3],[3,4]]<br>
+输出: [1,1,2,2]</p>
+</blockquote>
+<h3 id="思路分析-2">思路分析</h3>
+<p>因为相邻的岛屿会被看成一个岛屿，所以由海洋变为岛屿可以导致岛屿合并，从而岛屿数量减少。记录岛屿数量变化的过程，我们需要定义一个矩阵记录地图状态, 还需要定义初始含n × m个集合的并查集。不同于上一题，本题是一个二维的空间状态，所以每个节点相邻点有4个方向。我们有两种处理方法：1. 修改并查集的定义，使用二维数组版本的并查集。2. 将二维的位置投影到一维(x, y) -&gt; x * len + y。本题两种方法都可以，方法2代码量较少。</p>
+<h3 id="代码实现-2">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">numIslands2</span><span class="params">(<span class="type">int</span> m, <span class="type">int</span> n, <span class="type">int</span>[][] positions)</span> &#123;</span><br><span class="line">    List&lt;Integer&gt; ans = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 定义一个二维数组来记录岛屿的变化</span></span><br><span class="line">    <span class="type">int</span>[][] island = <span class="keyword">new</span> <span class="title class_">int</span>[m][n];</span><br><span class="line">    <span class="comment">// 记录总共的水域面积</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">total</span> <span class="operator">=</span> m * n;</span><br><span class="line">    <span class="comment">// 根据格子的数量创建并查集</span></span><br><span class="line">    <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(total);</span><br><span class="line">    <span class="comment">// 四个方向</span></span><br><span class="line">    <span class="type">int</span>[] dx = &#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="type">int</span>[] dy = &#123;<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span>[] p : positions) &#123;</span><br><span class="line">        <span class="comment">// 如果当前位置可以从海洋变成岛屿</span></span><br><span class="line">        <span class="keyword">if</span> (island[p[<span class="number">0</span>]][p[<span class="number">1</span>]] != <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="comment">// 将当前位置标记成岛屿</span></span><br><span class="line">            island[p[<span class="number">0</span>]][p[<span class="number">1</span>]] = <span class="number">1</span>;</span><br><span class="line">            <span class="comment">// 海洋范围减少</span></span><br><span class="line">            total--;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span> ; i &lt; <span class="number">4</span>; i++) &#123;</span><br><span class="line">                <span class="comment">// 找到相邻的位置</span></span><br><span class="line">                <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> p[<span class="number">0</span>] + dx[i], y = p[<span class="number">1</span>] + dy[i];</span><br><span class="line">                <span class="comment">// 如果该位置有效且已经是岛屿，那么与当前岛屿合并</span></span><br><span class="line">                <span class="keyword">if</span> (x &gt;= <span class="number">0</span> &amp;&amp; y &gt;= <span class="number">0</span> &amp;&amp; x &lt; m &amp;&amp; y &lt; n &amp;&amp; island[x][y] == <span class="number">1</span>)</span><br><span class="line">                    uf.union(p[<span class="number">0</span>] * n + p[<span class="number">1</span>], x * n + y);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 岛屿的个数等于从所有集合数量中减去海洋的数量</span></span><br><span class="line">        ans.add(uf.count - total);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2">分析</h3>
+<p>时间复杂度O(k)，空间复杂度O(n * m)</p>
+<h2 id="3-案例-账户合并">3.案例: 账户合并</h2>
+<blockquote>
+<p>给定一个帐户列表，每个元素是一个字符串列表，其中第一位元素是用户名，其余元素是该用户的电子邮件。我们需要合并这些帐户：如果两个帐户有相同的电子邮件地址，则这两个帐户肯定属于同一个人。合并帐户后，按以下格式返回帐户：每个帐户的第一个元素是名称，其余元素是按字典序排序后的电子邮件。</p>
+<p>输入:<br>
+[<br>
+[‘Jack’, ‘jacksmith@mail.com’, ‘jack00@mail.com’],<br>
+[‘Jack’, ‘jacknybravo@mail.com’],<br>
+[‘Jack’, ‘jacksmith@mail.com’, ‘jack_newyork@mail.com’],<br>
+[‘Mary’, ‘mary@mail.com’]<br>
+]<br>
+输出:<br>
+[<br>
+[‘Jack’, ‘jack00@mail.com’, ‘jack_newyork@mail.com’, ‘jacksmith@mail.com’],<br>
+[‘Jack’, ‘jacknybravo@mail.com’],<br>
+[‘Mary’, ‘mary@mail.com’]<br>
+]</p>
+</blockquote>
+<h3 id="思路分析-3">思路分析</h3>
+<p>本题很明显是连通性问题，但是处理的过程比较复杂。我们将每个账号看做一个单独的节点，然后根据相同的email来连接节点。连接后要将连接在一起的账号放在同一个列表中。</p>
+<ol>
+<li>将每个email对应到一个账户；如果某个email对应多个账户，用union find将多个账号相连</li>
+<li>相连之后，并查集会将email汇聚成几个集合，将每个集合和根节点的账号id对应起来，用一个map储存账号id与其该有的所有emails的映射关系。</li>
+<li>将上一步的列表排序，加上id所对应的人名，加入答案列表</li>
+</ol>
+<h3 id="代码实现-3">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; <span class="title function_">accountsMerge</span><span class="params">(List&lt;List&lt;String&gt;&gt; accounts)</span> &#123;</span><br><span class="line">    <span class="comment">// 创建对应所有账号的并查集</span></span><br><span class="line">    <span class="type">UF</span> <span class="variable">uf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UF</span>(accounts.size());</span><br><span class="line">    <span class="comment">// 建立一个map，将每个email对应到一个账户</span></span><br><span class="line">    HashMap&lt;String, Integer&gt; email2Id = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; accounts.size(); i++) &#123;</span><br><span class="line">        List&lt;String&gt; acc = accounts.get(i);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt; acc.size(); j++) &#123;</span><br><span class="line">            <span class="comment">// 每个email对应到第一次出现时所属的账户</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">email</span> <span class="operator">=</span> acc.get(j);</span><br><span class="line">            email2Id.putIfAbsent(email, i);</span><br><span class="line">            <span class="comment">// 如果对应多个账户，将多个账号相连</span></span><br><span class="line">            uf.union(i, email2Id.get(email));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 用一个map储存账号与其该有的emails的映射关系。</span></span><br><span class="line">    HashMap&lt;Integer, List&lt;String&gt;&gt; id2Email = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (String email: email2Id.keySet()) &#123;</span><br><span class="line">        <span class="comment">// 将每个集合和根节点的账号id对应起来</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">id</span> <span class="operator">=</span> uf.find(email2Id.get(email));</span><br><span class="line">        id2Email.putIfAbsent(id, <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;());</span><br><span class="line">        id2Email.get(id).add(email);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    List&lt;List&lt;String&gt;&gt; result = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> id : id2Email.keySet()) &#123;</span><br><span class="line">        List&lt;String&gt; account = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        result.add(account);</span><br><span class="line">        <span class="comment">// 得到账号用户名</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> accounts.get(id).get(<span class="number">0</span>);</span><br><span class="line">        account.add(name);</span><br><span class="line">        <span class="comment">// 列表排序</span></span><br><span class="line">        List&lt;String&gt; email = id2Email.get(id);</span><br><span class="line">        Collections.sort(email);</span><br><span class="line">        <span class="comment">// 加入答案列表</span></span><br><span class="line">        account.addAll(email);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)</p>
+<h2 id="4-案例-计算除法">4.案例: 计算除法</h2>
+<blockquote>
+<p>给出一组等式equations和他们对应的值values，每组等式由两个数字组成equations[i] = [A<sub>i</sub>, B<sub>i</sub>]，满足A<sub>i</sub> / B<sub>i</sub> = values[i]。给出一组queries，每组query由两个数字组成queries[i] = [C<sub>i</sub>, D<sub>i</sub>]。返回所有queries的值。</p>
+<p>输入:<br>
+equations = [[“a”,“b”],[“b”,“c”]]<br>
+values = [2.0,3.0]<br>
+queries = [[“a”,“c”],[“b”,“a”],[“a”,“e”],[“a”,“a”],[“x”,“x”]]<br>
+输出: [6.00000,0.50000,-1.00000,1.00000,-1.00000]</p>
+</blockquote>
+<h3 id="思路分析-4">思路分析</h3>
+<p>本题的原型是谷歌的一道汇率转换题，题干与本题类似，给出A-&gt;B, B-&gt;C, C-&gt;D… 等汇率转换比率，计算A-&gt;D的汇率。</p>
+<p>这题需要对UnionFind算法做出一点修改。只有两个节点相连通，才能相除。这说明他们属于同一个集合，有一个共同的父节点。所以我们需要额外的map记录当前节点对它所属的父节点的权重。比如X、Y有共同的父节点Z，我们已知 X/Z 的值和 Y/Z 的值，所以 X/Y = (X/Z) / (Y/Z)。</p>
+<h3 id="代码实现-4">代码实现</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="comment">// 记录每个节点对应的父节点</span></span><br><span class="line">    Map&lt;String, String&gt; father = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 记录每个节点对它所属的父节点的权重</span></span><br><span class="line">    Map&lt;String, Double&gt; weight = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">public</span> <span class="type">double</span>[] calcEquation(List&lt;List&lt;String&gt;&gt; equations, <span class="type">double</span>[] values, List&lt;List&lt;String&gt;&gt; queries) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; equations.size(); i++) &#123;</span><br><span class="line">            <span class="comment">// 获取每个等式的两个部分s1 &amp; s2</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> equations.get(i).get(<span class="number">0</span>), s2 = equations.get(i).get(<span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 如果s1 &amp; s2没被访问过，将它们加入并查集</span></span><br><span class="line">            putIfAbsent(s1);</span><br><span class="line">            putIfAbsent(s2);</span><br><span class="line">            <span class="comment">// 找到对应的父节点</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">root1</span> <span class="operator">=</span> find(s1);</span><br><span class="line">            <span class="type">String</span> <span class="variable">root2</span> <span class="operator">=</span> find(s2);</span><br><span class="line">            <span class="comment">// 将root1的父节点指向root2</span></span><br><span class="line">            father.put(root1, root2);</span><br><span class="line">            <span class="comment">// 更新root1对它所属的父节点的权重</span></span><br><span class="line">            weight.put(root1, weight.get(s2) * values[i] / weight.get(s1));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">double</span>[] res = <span class="keyword">new</span> <span class="title class_">double</span>[queries.size()];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; queries.size(); i++) &#123;</span><br><span class="line">            <span class="comment">// 获取每个query的两个部分s1 &amp; s2</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">s1</span> <span class="operator">=</span> queries.get(i).get(<span class="number">0</span>), s2 = queries.get(i).get(<span class="number">1</span>);</span><br><span class="line">            <span class="comment">// 如果s1 &amp; s2没在图中出现过，或者不属于同一集合</span></span><br><span class="line">            <span class="keyword">if</span> (!father.containsKey(s1) || !father.containsKey(s2) || !find(s1).equals(find(s2)))</span><br><span class="line">                res[i] = -<span class="number">1.0</span>; <span class="comment">// 无效查询，返回-1</span></span><br><span class="line">            <span class="keyword">else</span>  <span class="comment">// 根据他们分别对父节点的权重，计算结果</span></span><br><span class="line">                res[i] = weight.get(s1) / weight.get(s2);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">putIfAbsent</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        father.putIfAbsent(s, s);</span><br><span class="line">        weight.putIfAbsent(s, <span class="number">1.0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 修改后的find函数</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">find</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        <span class="comment">// 如果已经到达父节点，返回本身</span></span><br><span class="line">        <span class="keyword">if</span> (father.get(s).equals(s)) &#123;</span><br><span class="line">            <span class="keyword">return</span> s;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 更新到父节点的权重</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">prev</span> <span class="operator">=</span> father.get(s);</span><br><span class="line">        <span class="type">String</span> <span class="variable">p</span> <span class="operator">=</span> find(father.get(s));</span><br><span class="line">        father.put(s, p);</span><br><span class="line">        weight.put(s, weight.get(prev) * weight.get(s));</span><br><span class="line">        <span class="keyword">return</span> p;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分析-4">分析</h3>
+<p>时间复杂度O(n)，空间复杂度O(n)。本题可以使用BFS/DFS求解，感兴趣的读者可以作为习题。</p>
+<h2 id="总结">总结</h2>
+<p>本章我们学习了图类题中的第二类经典考察模板：并查集。并查集经常出现在大厂面试题中，本身难度不高，但是需要读者掌握这种数据结构的写法。大部分题目都只是并查集结构的简单应用。</p>
+
+<h2 id="习题">习题</h2>
+<ol>
+<li>使用BFS/DFS求解案例4计算除法</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/myblog/tags/Graph/" rel="tag"># Graph</a>
+              <a href="/myblog/tags/Union-Find/" rel="tag"># Union Find</a>
+              <a href="/myblog/tags/Disjoint-Set/" rel="tag"># Disjoint Set</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2019%20-%20Graph%20%E5%9B%BE%203/" rel="prev" title="Day 19 - Graph 图 3">
+                  <i class="fa fa-chevron-left"></i> Day 19 - Graph 图 3
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/myblog/Day%2021%20Array%20%E6%95%B0%E7%BB%84%20&%20String%20%E5%AD%97%E7%AC%A6%E4%B8%B2%201/" rel="next" title="Day 21 Array 数组 & String 字符串 1">
+                  Day 21 Array 数组 & String 字符串 1 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments" id="waline"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Daniel</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://lib.baomitu.com/canvas-nest.js/1.0.1/canvas-nest.js"></script>
+
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/next-theme-pjax/0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/4.0.7/pangu.min.js" integrity="sha256-j+yj56cdEY2CwkVtGyz18fNybFGpMGJ8JxG3GSyO2+I=" crossorigin="anonymous"></script>
+<script src="/myblog/js/comments.js"></script><script src="/myblog/js/utils.js"></script><script src="/myblog/js/motion.js"></script><script src="/myblog/js/next-boot.js"></script><script src="/myblog/js/bookmark.js"></script><script src="/myblog/js/pjax.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/myblog/js/third-party/search/local-search.js"></script>
+
+
+  <script class="next-config" data-name="mermaid" type="application/json">{"enable":true,"theme":"forest","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.7/mermaid.min.js","integrity":"sha256-G58AID1YoX5YaEtWfXSI0VLrZ6N4kvNvwg0BI8zUFxE="}}</script>
+  <script src="/myblog/js/third-party/tags/mermaid.js"></script>
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+<script class="next-config" data-name="waline" type="application/json">{"lang":"zh-cn","enable":true,"serverURL":"waline-sooty.vercel.app","cssUrl":"https://unpkg.com/@waline/client@v2/dist/waline.css","commentCount":true,"pageview":false,"placeholder":"欢迎评论哦","avatar":"mm","meta":["nick","mail","link"],"pageSize":10,"visitor":false,"comment_count":true,"requiredFields":["nick"],"libUrl":"//unpkg.com/@waline/client@v2/dist/waline.js","el":"#waline","comment":true,"path":"/myblog/Day%2020%20-%20Graph%20%E5%9B%BE%204/"}</script>
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css">
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.waline.el).then(() =>
+    NexT.utils.getScript(CONFIG.waline.libUrl, { condition: window.Waline })
+  ).then(() => 
+    Waline.init(Object.assign({}, CONFIG.waline,{ el: document.querySelector(CONFIG.waline.el) }))
+  );
+});
+</script>
+
+</body>
+</html>
